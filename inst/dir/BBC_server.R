@@ -1,15 +1,15 @@
 BBC_server <- function(input, output,session) {
-  
-  
-  
-  ########################## cBP 
+
+
+
+  ########################## cBP
   csvfile_BBC <- reactive({
     csvfile_BBC <- input$file1_BBC
     if (is.null(csvfile_BBC)){return(NULL)}
     dt_bbc <- read.csv(csvfile_BBC $datapath, header=input$header, sep=",")
     dt_bbc
   })
-  
+
   output$var_BBC  <- renderUI({
     if(is.null(input$file1_BBC$datapath)){
       return()
@@ -20,7 +20,7 @@ BBC_server <- function(input, output,session) {
             radioButtons("cbbc", "Select the colouring variable", choices = names(csvfile_BBC())),
             #radioButtons("wbbc", "Select the other if any", choices = names(csvfile_BBC())),
             radioButtons("abbc", "Select the size variable", choices = names(csvfile_BBC())),
-            
+
             actionBttn(
               inputId = "submit_BBC",
               label = "DRAW!",
@@ -30,7 +30,7 @@ BBC_server <- function(input, output,session) {
       )
     }
   })
-  
+
   ############## control panel for plots
   output$cp_BBC <- renderUI({
     if (is.null(input$file1_BBC$datapath)){return()}
@@ -50,8 +50,8 @@ BBC_server <- function(input, output,session) {
           column(4,
                  textInput("colour1_bbc", "Enter required legend title", "legend")
           ),
-          
-          
+
+
           column(4,
                  selectInput("pal.col_BBC", "Choose Colour pattern (plot):",
                              c("Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples", "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd",
@@ -80,15 +80,15 @@ BBC_server <- function(input, output,session) {
             materialSwitch(inputId = "manual_change_bbc", label = "Show me manual controls", status = "danger")
           )
         )
-        
+
       )
-      
+
     }
   })
-  
-  
+
+
   #################manual changes of the plot
-  
+
   output$manual_BBC <- renderUI({
     if (is.null(input$file1_BBC$datapath)) {
       return()
@@ -102,7 +102,7 @@ BBC_server <- function(input, output,session) {
     if (input$submit_BBC > 0 && input$manual_change_bbc > 0) {
       list(
         fluidRow(
-          
+
           column(4,
                  selectInput("face_bbc", "select font face",
                              choices = c("plain","italic","bold","bold.italic"),
@@ -116,7 +116,7 @@ BBC_server <- function(input, output,session) {
                                "Liberation Serif"
                              ),
                              selected = "Arial")),
-          
+
           column(4,
                  selectInput("colour2_bbc","choose colour of axis title and label:",
                              choices = c("darkblue","red","blue","black","yellow","orange","purple","brown","cyan","magenta"),
@@ -156,12 +156,12 @@ BBC_server <- function(input, output,session) {
           column(5,
                  sliderInput("angle_bbc","required angle of x-axis labels (degrees)",min=0, max=135, value=0, step = 15)
           )
-          
+
         )
       )
     }
-  }) 
-  
+  })
+
   ############### plotting
   plotInput <- reactive({
     if (is.null(input$file1_BBC$datapath)) {
@@ -176,7 +176,7 @@ BBC_server <- function(input, output,session) {
       z <- as.matrix(csvfile_BBC()[, input$cbbc])
       #w <- as.matrix(csvfile_BBC()[, input$wbbc])
       a <- as.matrix(csvfile_BBC()[, input$abbc])
-      
+
       data_bbc <- data.frame(
         xvar = x,
         yvar = y,
@@ -184,24 +184,24 @@ BBC_server <- function(input, output,session) {
         #was = w,
         average =a
       )
-      
+
       #data_bbc$xvar <- factor(data_bbc$xvar, levels = unique(data_bbc$xvar)) ### sorting factors bcz T1, T2 etc can cause problem
       data_bbc$treatment <- factor(data_bbc$treatment, levels = unique(data_bbc$treatment))
       nb.col <- nlevels(data_bbc$treatment) # number of colouring factors
-      
+
       if (is.null(input$pal.col_BBC)){
-        mycolors <- colorRampPalette(brewer.pal(8, "Blues"))(nb.col) 
+        mycolors <- colorRampPalette(brewer.pal(8, "Blues"))(nb.col)
       } else {
         # Changed here for a debugging
         mycolors <- colorRampPalette(brewer.pal(8, input$pal.col_BBC))(nb.col)
       }
-      
-      
+
+
       ########################
       #mycolors <- colorRampPalette(brewer.pal(8, input$pal.col_BBC))(nb.col) # colorrampallete code
       p <- ggplot2::ggplot(data_bbc, aes( color = treatment, y = yvar, x = xvar, size = average)) + # plot using aesthetics
         #geom_bar( stat = "identity",width=input$Barwidth_cbp) + # geometric bar operation is used to give the type of bar plot stacked at dodged.
-        geom_point(alpha=0.8)+ ## used for creating scatter plots or adding individual data points to an existing plot 
+        geom_point(alpha=0.8)+ ## used for creating scatter plots or adding individual data points to an existing plot
         scale_size(range = c(1,20),name = 'average',labels = NULL)+
         #facet_wrap(~was)+
         scale_color_manual(values = mycolors ) + # apply the color scale to fill the aesthetic of a plot
@@ -224,10 +224,10 @@ BBC_server <- function(input, output,session) {
         theme(plot.title = element_text(size=input$size5_bbc,hjust = 0.5,family = input$font_selector_bbc,color = input$colour3_bbc,face = input$face_bbc)
         )+
         theme(legend.position = input$Legend_Position_BBC)
-      
-      
-      
-      
+
+
+
+
       if (input$submit_BBC>0) {
         if (is.null(input$theme_bbc)) {
           return(p)
@@ -235,10 +235,10 @@ BBC_server <- function(input, output,session) {
         if (input$theme_bbc == "normal") {
           q <- p + theme_bw()
         } else if (input$theme_bbc == "economist") {
-          q <- p + ggthemes::theme_economist() 
+          q <- p + ggthemes::theme_economist()
         } else if (input$theme_bbc == "grey") {
-          q <- p + theme_gray() 
-        } 
+          q <- p + theme_gray()
+        }
         else if (input$theme_bbc == "minimal") {
           q <- p + theme_minimal()
         }else if (input$theme_bbc == "light") {
@@ -262,7 +262,7 @@ BBC_server <- function(input, output,session) {
         else if (input$theme_bbc == "hc") {
           q <- p + ggthemes::theme_hc()
         }
-        
+
         q<- q+theme(axis.text.x=element_text(angle=input$angle_bbc,color = input$colour2_bbc, vjust = 0.5),
                     axis.text.y=element_text(color = input$colour2_bbc))+
           theme(
@@ -280,19 +280,19 @@ BBC_server <- function(input, output,session) {
         q
       }
       else{
-        return(p) 
+        return(p)
       }
     }
-    
+
   })
-  ################################plot output 
+  ################################plot output
   output$bbc <- renderPlot( {
     plotInput()
   },
   bg = "transparent"
-  ) 
-  
-  
+  )
+
+
   ###############color show
   output$colours_BBC <- renderPlot( {
     if (is.null(input$Show_col_switch_BBC)){return()}
@@ -303,9 +303,9 @@ BBC_server <- function(input, output,session) {
     }
   },
   bg = "transparent"
-  ) 
-  
-  
+  )
+
+
   ################### Download button
   output$image_down_bbc <- renderUI({
     if (is.null(input$submit_BBC)) {
@@ -318,7 +318,7 @@ BBC_server <- function(input, output,session) {
     }
   })
   ############# Download image
-  
+
   output$downloadImage11 <- downloadHandler(
     filename = "Bubble chart.png",
     content = function(file) {
@@ -333,29 +333,29 @@ BBC_server <- function(input, output,session) {
   )
   ############################# download data set
   output$data_set_BBC = renderUI({
-    
-    
-    
+
+
+
     list(
       selectInput(
         "filenames_bbc", "Choose a dataset:",
-        list.files(
-          pattern = c("Bubble chart 1.csv|Bubble chart 2.csv")
-        )
+        choices = list.files(path = system.file("extdata", package = "grapesDraw"),
+                             pattern = "Bubble chart [1-2].csv",
+                             full.names = TRUE)
       ),
       downloadButton("downloadData11", label = "Download csv file", class = "butt11",)
     )
-    
-    
-    
+
+
+
   })
-  
+
   datasetInput = reactive({
     switch(input$filenames_bbc,
            filenames_bbc
     )
   })
-  
+
   output$downloadData11 = downloadHandler(
     filename = function() {
       input$filenames_bbc
