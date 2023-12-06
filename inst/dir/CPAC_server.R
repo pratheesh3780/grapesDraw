@@ -1,38 +1,23 @@
-library(shiny)
-library(shinydashboard)
-library(shinyWidgets)
-library(shinycssloaders)
-library(dplyr)
-library(ggplot2)
-library(viridis)
-library(viridisLite)
-library(hrbrthemes)
-library(RColorBrewer)
-library(ggthemes)
-library(shinythemes)
-library(reshape2)
-library(packcircles)
-
 CPAC_server <- function(input, output,session) {
   
   
   
   ########################## CPAC 
-  csvfile_CPAC <- reactive({
+  csvfile_CPAC <- shiny::reactive({
     csvfile_CPAC <- input$file1_CPAC
     if (is.null(csvfile_CPAC)){return(NULL)}
     dt_cpac <- read.csv(csvfile_CPAC $datapath, header=input$header, sep=",")
     dt_cpac
   })
   
-  output$var_CPAC  <- renderUI({
+  output$var_CPAC  <- shiny::renderUI({
     if(is.null(input$file1_CPAC$datapath)){
       return()
     }
     else{
-      list (radioButtons("xcpac", "Select the x axis variables", choices =    names(csvfile_CPAC())),
-            radioButtons("ycpac", "Select the y axis variables)", choices = names(csvfile_CPAC())),
-            actionBttn(
+      list (shiny::radioButtons("xcpac", "Select the x axis variables", choices =    names(csvfile_CPAC())),
+            shiny::radioButtons("ycpac", "Select the y axis variables)", choices = names(csvfile_CPAC())),
+            shinyWidgets::actionBttn(
               inputId = "submit_CPAC",
               label = "DRAW!",
               color = "danger",
@@ -43,26 +28,26 @@ CPAC_server <- function(input, output,session) {
   })
   
   ############## control panel for plots
-  output$cp_CPAC <- renderUI({
+  output$cp_CPAC <- shiny::renderUI({
     if (is.null(input$file1_CPAC$datapath)){return()}
     if (is.null(input$submit_CPAC)){return()}
     if (input$submit_CPAC > 0) {
       list(
         fluidRow(
           column(4,
-                 textInput("xlab_cpac", "Enter required x-axis title", "X-axis")
+                 shiny::textInput("xlab_cpac", "Enter required x-axis title", "X-axis")
           ),
           column(4,
-                 textInput("ylab_cpac", "Enter required y-axis title", "Y-axis")
+                 shiny::textInput("ylab_cpac", "Enter required y-axis title", "Y-axis")
           ),
           column(4,
-                 textInput("title_cpac", "Enter required title", "title")
+                 shiny::textInput("title_cpac", "Enter required title", "title")
           ),
           column(4,
-                 textInput("colour1_cpac", "Enter required legend title", "legend")
+                 shiny::textInput("colour1_cpac", "Enter required legend title", "legend")
           ),
           column(4,
-                 selectInput("mycolors", "Choose Colour pattern (plot):",
+                 shiny::selectInput("mycolors", "Choose Colour pattern (plot):",
                              c("Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples", "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd",
                                "Accent", "Dark2", "Paired", "Pastel1", "Pastel2", "Set1", "Set2", "Set3",
                                "BrBG", "PiYG", "PRGn", "PuOr", "RdBu", "RdGy", "RdYlBu", "RdYlGn", "Spectral"),
@@ -70,23 +55,23 @@ CPAC_server <- function(input, output,session) {
                  )
           ),
           column(4,
-                 selectInput("Legend_Position_CPAC", "Choose legend position:",
+                 shiny::selectInput("Legend_Position_CPAC", "Choose legend position:",
                              choices = c("none","right","left","top","bottom"),
                              selected = "right")
           ),
           column(
             4,
-            selectInput(
+            shiny::selectInput(
               "theme_cpac", "Choose your theme:",
               list("normal","economist","minimal","grey","light","void","tufte","stata","wsj","calc","hc")
             )
           ),
           column(3,
-                 materialSwitch(inputId = "Show_col_switch_CPAC", label = "Show available colours", status = "danger")
+                 shinyWidgets::materialSwitch(inputId = "Show_col_switch_CPAC", label = "Show available colours", status = "danger")
           ),
           column(
             4,
-            materialSwitch(inputId = "manual_change_CPAC", label = "Show me manual controls", status = "danger")
+            shinyWidgets::materialSwitch(inputId = "manual_change_CPAC", label = "Show me manual controls", status = "danger")
           )
         )
         
@@ -98,7 +83,7 @@ CPAC_server <- function(input, output,session) {
   
   #################manual changes of the plot
   
-  output$manual_CPAC <- renderUI({
+  output$manual_CPAC <- shiny::renderUI({
     if (is.null(input$file1_CPAC$datapath)) {
       return()
     }
@@ -113,28 +98,28 @@ CPAC_server <- function(input, output,session) {
         fluidRow(
           
           column(4,
-                 selectInput("face_cpac", "select font face",
+                 shiny::selectInput("face_cpac", "select font face",
                              choices = c("plain","italic","bold","bold.italic"),
                              selected = "plain")
           ),
           column(4,
-                 selectInput("colour2_cpac","choose colour of axis title and label:",
+                 shiny::selectInput("colour2_cpac","choose colour of axis title and label:",
                              choices = c("darkblue","red","blue","black","yellow","orange","purple","brown","cyan","magenta"),
                              selected = "black")
           ),
           column(4,
-                 selectInput("colour4_cpac","choose colour of legend title and label:",
+                 shiny::selectInput("colour4_cpac","choose colour of legend title and label:",
                              choices = c("darkblue","red","blue","black","yellow","orange","purple","brown","cyan","magenta"),
                              selected = "black")
           ),
           column(4,
-                 selectInput("colour3_cpac","choose colour of plot title:",
+                 shiny::selectInput("colour3_cpac","choose colour of plot title:",
                              choices = c("darkblue","red","blue","black","yellow","orange","purple","brown","cyan","magenta"),
                              selected = "black")
           ),
           
           column(4,
-                 selectInput("font_selector_cpac", "select a font",
+                 shiny::selectInput("font_selector_cpac", "select a font",
                              choices = c(
                                "Arial" ,"Calibri","Georgia","Helvetica" ,"Palatino","Garamond",
                                "Times New Roman" ,"Baskerville","Courier New","Verdana","Century Schoolbook",
@@ -143,28 +128,28 @@ CPAC_server <- function(input, output,session) {
                              selected = "Arial")),
           
           column(5,
-                 sliderInput("size1_cpac", "axis label size:",
+                 shiny::sliderInput("size1_cpac", "axis label size:",
                              min = 10, max = 20, value = 10)
           ),
           column(5,
-                 sliderInput("size2_cpac", "axis title size:",
+                 shiny::sliderInput("size2_cpac", "axis title size:",
                              min = 10, max = 20, value = 10
                  )
           ),
           column(5,
-                 sliderInput("size3_cpac", "legend label size:",
+                 shiny::sliderInput("size3_cpac", "legend label size:",
                              min = 10, max = 20, value = 10)
           ),
           column(5,
-                 sliderInput("size4_cpac", "legend title size:",
+                 shiny::sliderInput("size4_cpac", "legend title size:",
                              min = 10, max = 20, value = 10)
           ),
           column(5,
-                 sliderInput("size5_cpac", "plot title size:",
+                 shiny::sliderInput("size5_cpac", "plot title size:",
                              min = 15, max = 30, value = 15)
           ),
           column(5,
-                 sliderInput("angle_cpac","required angle of x-axis labels (degrees)",min=0, max=135, value=0, step = 15)
+                 shiny::sliderInput("angle_cpac","required angle of x-axis labels (degrees)",min=0, max=135, value=0, step = 15)
           )
           
         )
@@ -173,7 +158,7 @@ CPAC_server <- function(input, output,session) {
   }) 
   
   ############### plotting
-  plotInput <- reactive({
+  plotInput <- shiny::reactive({
     if (is.null(input$file1_CPAC$datapath)) {
       return()
     }
@@ -191,16 +176,16 @@ CPAC_server <- function(input, output,session) {
       nb.col <- nlevels(data_cpac$xvar) # number of colouring factors
       
       if (is.null(input$pal.col_CPAC)){
-        mycolors <- colorRampPalette(brewer.pal(8, "Blues"))(nb.col) 
+        mycolors <- colorRampPalette(RColorBrewer::brewer.pal(8, "Blues"))(nb.col) 
       } else {
         # Changed here for a debugging
-        mycolors <- colorRampPalette(brewer.pal(8, input$pal.col_CPAC))(nb.col)
+        mycolors <- colorRampPalette(RColorBrewer::brewer.pal(8, input$pal.col_CPAC))(nb.col)
       }
       
-      packing <- circleProgressiveLayout(data_cpac$y, sizetype='area')
+      packing <-packcircles::circleProgressiveLayout(data_cpac$y, sizetype='area')
       packing$radius <- 0.95*packing$radius
       data <- cbind(data_cpac, packing)
-      dat.gg <- circleLayoutVertices(packing, npoints=50)
+      dat.gg <- packcircles::circleLayoutVertices(packing, npoints=50)
       #########################
       
       
@@ -298,7 +283,7 @@ CPAC_server <- function(input, output,session) {
     
   })
   ################################plot output 
-  output$cpac <- renderPlot( {
+  output$cpac <- shiny::renderPlot( {
     plotInput()
   },
   bg = "transparent"
@@ -306,11 +291,11 @@ CPAC_server <- function(input, output,session) {
   
   
   ###############color show
-  output$colours_CPAC <- renderPlot( {
+  output$colours_CPAC <- shiny::renderPlot( {
     if (is.null(input$Show_col_switch_CPAC)){return()}
     if (input$Show_col_switch_CPAC > 0) {
       par(mar=c(3,4,2,2))
-      display.brewer.all(n = NULL, type = "all", select = NULL,
+      RColorBrewer::display.brewer.all(n = NULL, type = "all", select = NULL,
                          colorblindFriendly = TRUE)
     }
   },
@@ -320,19 +305,19 @@ CPAC_server <- function(input, output,session) {
   
   
   ################### Download button
-  output$image_down_cpac<- renderUI({
+  output$image_down_cpac<- shiny::renderUI({
     if (is.null(input$submit_CPAC)) {
       return()
     }
     if (input$submit_CPAC > 0) {
-      list(downloadButton("downloadImage13",
+      list(shiny::downloadButton("downloadImage13",
                           label = "Download Plot", class = "butt1"
       ))
     }
   })
   ############# Download image
   
-  output$downloadImage13 <- downloadHandler(
+  output$downloadImage13 <- shiny::downloadHandler(
     filename = "Circular packing.png",
     content = function(file) {
       device <- function(..., width, height) {
@@ -341,33 +326,33 @@ CPAC_server <- function(input, output,session) {
                        res = 300, units = "in"
         )
       }
-      ggsave(file, plot = plotInput(), device = device)
+      ggplot2::ggsave(file, plot = plotInput(), device = device)
     }
   ) 
   ############################# download data set
-  output$data_set_CPAC = renderUI({
+  output$data_set_CPAC = shiny::renderUI({
     
     list(
-      selectInput(
+      shiny::selectInput(
         "filenames_cpac", "Choose a dataset:",
         list.files(
-          pattern = c("Circular packing 1.csv|Circular packing 2.csv")
+          pattern = c("circular_packing_1.csv|circular_packing_2.csv")
         )
       ),
-      downloadButton("downloadData13", label = "Download csv file", class = "butt13")
+      shiny::downloadButton("downloadData13", label = "Download csv file", class = "butt13")
     )
     
     
     
   })
   
-  datasetInput = reactive({
+  datasetInput = shiny::reactive({
     switch(input$filenames_cpac,
            filenames_cpac
     )
   })
   
-  output$downloadData13 = downloadHandler(
+  output$downloadData13 = shiny::downloadHandler(
     filename = function() {
       input$filenames_cpac
     },

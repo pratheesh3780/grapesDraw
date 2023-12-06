@@ -1,41 +1,24 @@
-library(shiny)
-library(shinydashboard)
-library(shinyWidgets)
-library(shinycssloaders)
-library(dplyr)
-library(ggplot2)
-library(viridis)
-library(viridisLite)
-library(hrbrthemes)
-library(RColorBrewer)
-library(ggthemes)
-library(shinythemes)
-library(ggridges)
-library(tidyr)
-library(forcats)
-
-
 RLP_server <- function(input, output,session) {
   
   
   
   ##########################rlp
-  csvfile_RLP <- reactive({
+  csvfile_RLP <- shiny::reactive({
     csvfile_RLP <- input$file1_RLP
     if (is.null(csvfile_RLP)){return(NULL)}
     dt_cbp  <- read.csv(csvfile_RLP $datapath, header=input$header, sep=",")
     dt_cbp 
   })
   
-  output$var_RLP  <- renderUI({
+  output$var_RLP  <- shiny::renderUI({
     if(is.null(input$file1_RLP$datapath)){
       return()
     }
     else{
-      list (radioButtons("yrlp", "Select the x axis variables (numerical value)", choices =    names(csvfile_RLP())),
-            radioButtons("xrlp", "Select the y axis variables (categorical variable)", choices = names(csvfile_RLP())),
+      list (shiny::radioButtons("yrlp", "Select the x axis variables (numerical value)", choices =    names(csvfile_RLP())),
+            shiny::radioButtons("xrlp", "Select the y axis variables (categorical variable)", choices = names(csvfile_RLP())),
             
-            actionBttn(
+            shinyWidgets::actionBttn(
               inputId = "submit_RLP",
               label = "DRAW!",
               color = "danger",
@@ -46,51 +29,51 @@ RLP_server <- function(input, output,session) {
   })
   
   ############## control panel for plots
-  output$cp_RLP <- renderUI({
+  output$cp_RLP <- shiny::renderUI({
     if (is.null(input$file1_RLP$datapath)){return()}
     if (is.null(input$submit_RLP)){return()}
     if (input$submit_RLP > 0) {
       list(
         fluidRow(
           column(4,
-                 textInput("xlab_rlp", "Enter required x-axis title", "X-axis")
+                 shiny::textInput("xlab_rlp", "Enter required x-axis title", "X-axis")
           ),
           column(4,
-                 textInput("ylab_rlp", "Enter required y-axis title", "Y-axis")
+                 shiny::textInput("ylab_rlp", "Enter required y-axis title", "Y-axis")
           ),
           column(4,
-                 textInput("title_rlp", "Enter required title", "title")
+                 shiny::textInput("title_rlp", "Enter required title", "title")
           ),
           column(4,
-                 textInput("colour1_rlp", "Enter required legend title", "legend")
+                 shiny::textInput("colour1_rlp", "Enter required legend title", "legend")
           ),
           
           
           column(4,
-                 selectInput("pal.col_rlp", "Choose Colour pattern (plot):",
+                 shiny::selectInput("pal.col_rlp", "Choose Colour pattern (plot):",
                              list(`Sequential` = list("Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples", "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd"),
                                   `Qualitative` = list("Accent", "Dark2", "Paired", "Pastel1", "Pastel2", "Set1", "Set2", "Set3"),
                                   `Diverging` = list("BrBG", "PiYG", "PRGn", "PuOr", "RdBu", "RdGy", "RdYlBu", "RdYlGn", "Spectral"))
                  )
           ),
           column(4,
-                 selectInput("Legend_Position_RLP", "Choose legend position:",
+                 shiny::selectInput("Legend_Position_RLP", "Choose legend position:",
                              choices = c("none","right","left","top","bottom"),
                              selected = "right")
           ),
           column(
             4,
-            selectInput(
+            shiny::selectInput(
               "theme_rlp", "Choose your theme:",
               list("normal","economist","minimal","grey","light","void","tufte","stata","wsj","calc","hc")
             )
           ),
           column(3,
-                 materialSwitch(inputId = "Show_col_switch_RLP", label = "Show available colours", status = "danger")
+                 shinyWidgets::materialSwitch(inputId = "Show_col_switch_RLP", label = "Show available colours", status = "danger")
           ),
           column(
             4,
-            materialSwitch(inputId = "manual_change_rlp", label = "Show me manual controls", status = "danger")
+            shinyWidgets::materialSwitch(inputId = "manual_change_rlp", label = "Show me manual controls", status = "danger")
           )
         )
         
@@ -104,7 +87,7 @@ RLP_server <- function(input, output,session) {
   
   #################manual changes of the plot
   
-  output$manual_RLP <- renderUI({
+  output$manual_RLP <- shiny::renderUI({
     if (is.null(input$file1_RLP$datapath)) {
       return()
     }
@@ -119,12 +102,12 @@ RLP_server <- function(input, output,session) {
         fluidRow(
           
           column(4,
-                 selectInput("face_rlp", "select font face",
+                 shiny::selectInput("face_rlp", "select font face",
                              choices = c("plain","italic","bold","bold.italic"),
                              selected = "plain")
           ),
           column(4,
-                 selectInput("font_selector_rlp", "select a font",
+                 shiny::selectInput("font_selector_rlp", "select a font",
                              choices = c(
                                "Arial" ,"Calibri","Georgia","Helvetica" ,"Palatino","Garamond",
                                "Times New Roman" ,"Baskerville","Courier New","Verdana","Century Schoolbook",
@@ -133,43 +116,43 @@ RLP_server <- function(input, output,session) {
                              selected = "Arial")
           ),
           column(4,
-                 selectInput("colour2_rlp","choose colour of axis title and label:",
+                 shiny::selectInput("colour2_rlp","choose colour of axis title and label:",
                              choices = c("darkblue","red","blue","black","yellow","orange","purple","brown","cyan","magenta"),
                              selected = "black")
           ),
           column(4,
-                 selectInput("colour4_rlp","choose colour of legend title and label:",
+                 shiny::selectInput("colour4_rlp","choose colour of legend title and label:",
                              choices = c("darkblue","red","blue","black","yellow","orange","purple","brown","cyan","magenta"),
                              selected = "black")
           ),
           column(4,
-                 selectInput("colour3_rlp","choose colour of plot title:",
+                 shiny::selectInput("colour3_rlp","choose colour of plot title:",
                              choices = c("darkblue","red","blue","black","yellow","orange","purple","brown","cyan","magenta"),
                              selected = "black")
           ),
           column(5,
-                 sliderInput("size1_rlp", "axis label size:",
+                 shiny::sliderInput("size1_rlp", "axis label size:",
                              min = 10, max = 20, value = 10)
           ),
           column(5,
-                 sliderInput("size2_rlp", "axis title size:",
+                 shiny::sliderInput("size2_rlp", "axis title size:",
                              min = 10, max = 20, value = 10
                  )
           ),
           column(5,
-                 sliderInput("size3_rlp", "legend label size:",
+                 shiny::sliderInput("size3_rlp", "legend label size:",
                              min = 10, max = 20, value = 10)
           ),
           column(5,
-                 sliderInput("size4_rlp", "legend title size:",
+                 shiny::sliderInput("size4_rlp", "legend title size:",
                              min = 10, max = 20, value = 10)
           ),
           column(5,
-                 sliderInput("size5_rlp", "plot title size:",
+                 shiny::sliderInput("size5_rlp", "plot title size:",
                              min = 15, max = 30, value = 15)
           ),
           column(5,
-                 sliderInput("angle_rlp","required angle of x-axis labels (degrees)",min=0, max=135, value=0, step = 15)
+                 shiny::sliderInput("angle_rlp","required angle of x-axis labels (degrees)",min=0, max=135, value=0, step = 15)
           )
           
           
@@ -179,7 +162,7 @@ RLP_server <- function(input, output,session) {
   }) 
   
   ############### plotting
-  plotInput <- reactive({
+  plotInput <- shiny::reactive({
     if (is.null(input$file1_RLP$datapath)) {
       return()
     }
@@ -201,10 +184,10 @@ RLP_server <- function(input, output,session) {
       nb.col <- nlevels(data_rlp$text) # number of colouring factors
       
       if (is.null(input$pal.col_rlp)){
-        mycolors <- colorRampPalette(brewer.pal(8, "Blues"))(nb.col) 
+        mycolors <- colorRampPalette(RColorBrewer::brewer.pal(8, "Blues"))(nb.col) 
       } else {
         # Changed here for a debugging
-        mycolors <- colorRampPalette(brewer.pal(8, input$pal.col_rlp))(nb.col)
+        mycolors <- colorRampPalette(RColorBrewer::brewer.pal(8, input$pal.col_rlp))(nb.col)
       }
       
       ########################
@@ -297,7 +280,7 @@ RLP_server <- function(input, output,session) {
     
   })
   ################################plot output 
-  output$rlp <- renderPlot( {
+  output$rlp <- shiny::renderPlot( {
     plotInput()
   },
   bg = "transparent"
@@ -305,11 +288,11 @@ RLP_server <- function(input, output,session) {
   
   
   ###############color show
-  output$colours_RLP <- renderPlot( {
+  output$colours_RLP <- shiny::renderPlot( {
     if (is.null(input$Show_col_switch_RLP)){return()}
     if (input$Show_col_switch_RLP > 0) {
       par(mar=c(3,4,2,2))
-      display.brewer.all(n = NULL, type = "all", select = NULL,
+      RColorBrewer::display.brewer.all(n = NULL, type = "all", select = NULL,
                          colorblindFriendly = TRUE)
     }
   },
@@ -317,19 +300,19 @@ RLP_server <- function(input, output,session) {
   ) 
   
   ################### Download button
-  output$image_down_rlp <- renderUI({
+  output$image_down_rlp <- shiny::renderUI({
     if (is.null(input$submit_RLP)) {
       return()
     }
     if (input$submit_RLP > 0) {
-      list(downloadButton("downloadImage8",
+      list(shiny::downloadButton("downloadImage8",
                           label = "Download Plot", class = "butt1"
       ))
     }
   })
   ############# Download image
   
-  output$downloadImage8 <- downloadHandler(
+  output$downloadImage8 <- shiny::downloadHandler(
     filename = "Ridgeline plot.png",
     content = function(file) {
       device <- function(..., width, height) {
@@ -338,35 +321,35 @@ RLP_server <- function(input, output,session) {
                        res = 300, units = "in"
         )
       }
-      ggsave(file, plot = plotInput(), device = device)
+      ggplot2::ggsave(file, plot = plotInput(), device = device)
     }
   )
   ############################# download data set
-  output$data_set_RLP = renderUI({
+  output$data_set_RLP = shiny::renderUI({
     
     
     
     list(
-      selectInput(
+      shiny::selectInput(
         "filenames_rlp", "Choose a dataset:",
         list.files(
-          pattern = c("Ridgeline plot 1.csv|Ridgeline plot 2.csv")
+          pattern = c("ridgeline_plot_1.csv|ridgeline_plot_2.csv")
         )
       ),
-      downloadButton("downloadData8", label = "Download csv file", class = "butt8",)
+      shiny::downloadButton("downloadData8", label = "Download csv file", class = "butt8",)
     )
     
     
     
   })
   
-  datasetInput = reactive({
+  datasetInput = shiny::reactive({
     switch(input$filenames_rlp,
            filenames_rlp
     )
   })
   
-  output$downloadData8 = downloadHandler(
+  output$downloadData8 = shiny::downloadHandler(
     filename = function() {
       input$filenames_rlp
     },

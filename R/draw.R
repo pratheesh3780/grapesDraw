@@ -1,5 +1,9 @@
-
-# function to initialize grapesDraw
+#' Title
+#'
+#' @return
+#' @export
+#'
+#' @examples
 draw <- function() {
   appFile <- system.file("app.R", package = "grapesDraw")
   if (!file.exists(appFile)) {

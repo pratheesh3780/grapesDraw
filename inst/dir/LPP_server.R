@@ -3,20 +3,20 @@ LPP_server <- function(input, output,session) {
   
   
   ########################## MBP 
-  csvfile_LPP <- reactive({
+  csvfile_LPP <- shiny::reactive({
     csvfile_LPP <- input$file1_LPP
     if (is.null(csvfile_LPP)){return(NULL)}
     dt_MBP  <- read.csv(csvfile_LPP $datapath, header=input$header, sep=",")
     dt_MBP 
   })
   
-  output$var_LPP  <- renderUI({
+  output$var_LPP  <- shiny::renderUI({
     if(is.null(input$file1_LPP$datapath)){
       return()
     }
-    list (radioButtons("xlpp", "Select the x axis variables", choices =    names(csvfile_LPP())),
-          radioButtons("ylpp", "Select the y axis variables (quantitative variable)", choices = names(csvfile_LPP())),
-          actionBttn(
+    list (shiny::radioButtons("xlpp", "Select the x axis variables", choices =    names(csvfile_LPP())),
+          shiny::radioButtons("ylpp", "Select the y axis variables (quantitative variable)", choices = names(csvfile_LPP())),
+          shinyWidgets::actionBttn(
             inputId = "submit_LPP",
             label = "DRAW!",
             color = "danger",
@@ -26,51 +26,51 @@ LPP_server <- function(input, output,session) {
     
   })
   ############## control panel for plots
-  output$cp_LPP <- renderUI({
+  output$cp_LPP <- shiny::renderUI({
     if (is.null(input$file1_LPP$datapath)){return()}
     if (is.null(input$submit_LPP)){return()}
     if (input$submit_LPP > 0) {
       list(
         fluidRow(
           column(4,
-                 textInput("xlab_lpp", "Enter required x-axis title", "X-axis")
+                 shiny::textInput("xlab_lpp", "Enter required x-axis title", "X-axis")
           ),
           column(4,
-                 textInput("ylab_lpp", "Enter required y-axis title", "Y-axis")
+                 shiny::textInput("ylab_lpp", "Enter required y-axis title", "Y-axis")
           ),
           column(4,
-                 textInput("title_lpp", "Enter required title", "title")
+                 shiny::textInput("title_lpp", "Enter required title", "title")
           ),
           column(4,
-                 textInput("legend_lpp", "Enter required legend title", "legend")
+                 shiny::textInput("legend_lpp", "Enter required legend title", "legend")
           ),
           
           
           column(4,
-                 selectInput("pal.col_LPP", "Choose gradient Colour pattern (plot):",
+                 shiny::selectInput("pal.col_LPP", "Choose gradient Colour pattern (plot):",
                              list(`Sequential` = list("Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples", "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd"),
                                   `Qualitative` = list("Accent", "Dark2", "Paired", "Pastel1", "Pastel2", "Set1", "Set2", "Set3"),
                                   `Diverging` = list("BrBG", "PiYG", "PRGn", "PuOr", "RdBu", "RdGy", "RdYlBu", "RdYlGn", "Spectral"))
                  )
           ),
           column(4,
-                 selectInput("Legend_Position_LPP", "Choose legend position:",
+                 shiny::selectInput("Legend_Position_LPP", "Choose legend position:",
                              choices = c("none","right","left","top","bottom"),
                              selected = "right")
           ),
           column(
             4,
-            selectInput(
+            shiny::selectInput(
               "theme_lpp", "Choose your theme:",
               list("normal","economist","minimal","grey","light","void","tufte","stata","wsj","calc","hc")
             )
           ),
           column(3,
-                 materialSwitch(inputId = "Show_col_switch_LPP", label = "Show available colours", status = "danger")
+                 shinyWidgets::materialSwitch(inputId = "Show_col_switch_LPP", label = "Show available colours", status = "danger")
           ),
           column(
             4,
-            materialSwitch(inputId = "manual_change_lpp", label = "Show me manual controls", status = "danger")
+            shinyWidgets::materialSwitch(inputId = "manual_change_lpp", label = "Show me manual controls", status = "danger")
           )
         )
         
@@ -83,7 +83,7 @@ LPP_server <- function(input, output,session) {
   
   #################manual changes of the plot
   
-  output$manual_LPP <- renderUI({
+  output$manual_LPP <- shiny::renderUI({
     if (is.null(input$file1_LPP$datapath)) {
       return()
     }
@@ -98,12 +98,12 @@ LPP_server <- function(input, output,session) {
         fluidRow(
           
           column(4,
-                 selectInput("face_lpp", "select font face",
+                 shiny::selectInput("face_lpp", "select font face",
                              choices = c("plain","italic","bold","bold.italic"),
                              selected = "plain")
           ),
           column(4,
-                 selectInput("font_selector_lpp", "select a font",
+                 shiny::selectInput("font_selector_lpp", "select a font",
                              choices = c(
                                "Arial" ,"Calibri","Georgia","Helvetica" ,"Palatino","Garamond",
                                "Times New Roman" ,"Baskerville","Courier New","Verdana","Century Schoolbook",
@@ -112,46 +112,46 @@ LPP_server <- function(input, output,session) {
                              selected = "Arial")),
           
           column(4,
-                 selectInput("colour2_lpp","choose colour of axis title and label:",
+                 shiny::selectInput("colour2_lpp","choose colour of axis title and label:",
                              choices = c("darkblue","red","blue","black","yellow","orange","purple","brown","cyan","magenta"),
                              selected = "black")
           ),
           column(4,
-                 selectInput("colour4_lpp","choose colour of legend title and label:",
+                 shiny::selectInput("colour4_lpp","choose colour of legend title and label:",
                              choices = c("darkblue","red","blue","black","yellow","orange","purple","brown","cyan","magenta"),
                              selected = "black")
           ),
           column(4,
-                 selectInput("colour3_lpp","choose colour of plot title:",
+                 shiny::selectInput("colour3_lpp","choose colour of plot title:",
                              choices = c("darkblue","red","blue","black","yellow","orange","purple","brown","cyan","magenta"),
                              selected = "black")
           ),
           
           
           column(5,
-                 sliderInput("size1_lpp", "axis label size:",
+                 shiny::sliderInput("size1_lpp", "axis label size:",
                              min = 10, max = 20, value = 10)
           ),
           column(5,
-                 sliderInput("size2_lpp", "axis title size:",
+                 shiny::sliderInput("size2_lpp", "axis title size:",
                              min = 10, max = 20, value = 10
                  )
           ),
           column(5,
-                 sliderInput("size3_lpp", "legend label size:",
+                 shiny::sliderInput("size3_lpp", "legend label size:",
                              min = 10, max = 20, value = 10)
           ),
           column(5,
-                 sliderInput("size4_lpp", "legend title size:",
+                 shiny::sliderInput("size4_lpp", "legend title size:",
                              min = 10, max = 20, value = 10)
           ),
           column(5,
-                 sliderInput("size5_lpp", "plot title size:",
+                 shiny::sliderInput("size5_lpp", "plot title size:",
                              min = 15, max = 30, value = 15)
           ),
           
           column(5,
-                 sliderInput("angle_lpp","required angle of x-axis labels (degrees)",min=0, max=135, value= 0, step = 15)
+                 shiny::sliderInput("angle_lpp","required angle of x-axis labels (degrees)",min=0, max=135, value= 0, step = 15)
           )
         )
       )
@@ -159,7 +159,7 @@ LPP_server <- function(input, output,session) {
   }) 
   
   ############### plotting
-  plotInput <- reactive({
+  plotInput <- shiny::reactive({
     if (is.null(input$file1_LPP$datapath)) {
       return()
     }
@@ -180,10 +180,10 @@ LPP_server <- function(input, output,session) {
       nb.col <- nlevels(data_lpp$xvar) # number of colouring factors
       
       if (is.null(input$pal.col_LPP)){
-        mycolors <- colorRampPalette(brewer.pal(8, "Blues"))(nb.col) 
+        mycolors <- colorRampPalette(RColorBrewer::brewer.pal(8, "Blues"))(nb.col) 
       } else {
         # Changed here for a debugging
-        mycolors <- colorRampPalette(brewer.pal(8, input$pal.col_LPP))(nb.col)
+        mycolors <- colorRampPalette(RColorBrewer::brewer.pal(8, input$pal.col_LPP))(nb.col)
       }
       #mycolors <- colorRampPalette(brewer.pal(8, input$pal.col_LPP))(nb.col) # colorrampallete code
       p <- ggplot2::ggplot(data_lpp, aes(fill = xvar, y = yvar, x = xvar)) + # plot using aesthetics
@@ -271,7 +271,7 @@ LPP_server <- function(input, output,session) {
     
   })
   ################################plot output 
-  output$lpp <- renderPlot( {
+  output$lpp <- shiny::renderPlot( {
     plotInput()
   },
   bg = "transparent"
@@ -279,11 +279,11 @@ LPP_server <- function(input, output,session) {
   
   
   ###############color show
-  output$colours_LPP <- renderPlot( {
+  output$colours_LPP <- shiny::renderPlot( {
     if (is.null(input$Show_col_switch_LPP)){return()}
     if (input$Show_col_switch_LPP > 0) {
       par(mar=c(3,4,2,2))
-      display.brewer.all(n = NULL, type = "all", select = NULL,
+      RColorBrewer::display.brewer.all(n = NULL, type = "all", select = NULL,
                          colorblindFriendly = TRUE)
     }
   },
@@ -292,19 +292,19 @@ LPP_server <- function(input, output,session) {
   
    
   ################### Download button
-  output$image_down_lpp <- renderUI({
+  output$image_down_lpp <- shiny::renderUI({
     if (is.null(input$submit_LPP)) {
       return()
     }
     if (input$submit_LPP > 0) {
-      list(downloadButton("downloadImage6",
+      list(shiny::downloadButton("downloadImage6",
                           label = "Download Plot", class = "butt1"
       ))
     }
   })
   ############# Download image
   
-  output$downloadImage6 <- downloadHandler(
+  output$downloadImage6 <- shiny::downloadHandler(
     filename = "Lollipop chart.png",
     content = function(file) {
       device <- function(..., width, height) {
@@ -313,35 +313,35 @@ LPP_server <- function(input, output,session) {
                        res = 300, units = "in"
         )
       }
-      ggsave(file, plot = plotInput(), device = device)
+      ggplot2::ggsave(file, plot = plotInput(), device = device)
     }
   )
   ############################# download data set
-  output$data_set_LPP = renderUI({
+  output$data_set_LPP = shiny::renderUI({
     
     
     
     list(
-      selectInput(
+      shiny::selectInput(
         "filenames_lpp", "Choose a dataset:",
         list.files(
-          pattern = c("Lollipop chart 1.csv|Lollipop chart 2.csv")
+          pattern = c("lollipop_chart_1.csv|lollipop_chart_2.csv")
         )
       ),
-      downloadButton("downloadData6", label = "Download csv file", class = "butt6",)
+      shiny::downloadButton("downloadData6", label = "Download csv file", class = "butt6",)
     )
     
     
     
   })
   
-  datasetInput = reactive({
+  datasetInput = shiny::reactive({
     switch(input$filenames_lpp,
            filenames_lpp
     )
   })
   
-  output$downloadData6 = downloadHandler(
+  output$downloadData6 = shiny::downloadHandler(
     filename = function() {
       input$filenames_lpp
     },

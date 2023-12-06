@@ -4,6 +4,17 @@ CORR_ui <- function(){
            box(width = NULL, solidHeader = TRUE,
                plotOutput('corr')%>% withSpinner(color="#0dc5c1"),
                tags$br(),
+               tags$script("
+      $(document).on('shiny:connected', function(event) {
+        var myWidth = $(window).width();
+        Shiny.onInputChange('shiny_width', myWidth);
+      });
+
+      $(document).on('shiny:connected', function(event) {
+        var myHeight = $(window).height();
+        Shiny.onInputChange('shiny_height', myHeight);
+      });
+    "),   
                uiOutput('image_down_corr'),#download button for plot download
                tags$br()
            ),

@@ -3,22 +3,22 @@ CBP_server <- function(input, output,session) {
   
   
   ########################## cBP 
-  csvfile_CBP <- reactive({
+  csvfile_CBP <- shiny::reactive({
     csvfile_CBP <- input$file1_CBP
     if (is.null(csvfile_CBP)){return(NULL)}
     dt_cbp  <- read.csv(csvfile_CBP $datapath, header=input$header, sep=",")
     dt_cbp 
   })
   
-  output$var_CBP  <- renderUI({
+  output$var_CBP  <- shiny::renderUI({
     if(is.null(input$file1_CBP$datapath)){
       return()
     }
     else{
-      list (radioButtons("xcbp", "Select the x axis variables", choices =    names(csvfile_CBP())),
-            radioButtons("ycbp", "Select the observations (quantitative variable)", choices = names(csvfile_CBP())),
+      list (shiny::radioButtons("xcbp", "Select the x axis variables", choices =    names(csvfile_CBP())),
+            shiny::radioButtons("ycbp", "Select the observations (quantitative variable)", choices = names(csvfile_CBP())),
             
-            actionBttn(
+            shinyWidgets::actionBttn(
               inputId = "submit_CBP",
               label = "DRAW!",
               color = "danger",
@@ -29,58 +29,58 @@ CBP_server <- function(input, output,session) {
   })
   
   ############## control panel for plots
-  output$cp_CBP <- renderUI({
+  output$cp_CBP <- shiny::renderUI({
     if (is.null(input$file1_CBP$datapath)){return()}
     if (is.null(input$submit_CBP)){return()}
     if (input$submit_CBP > 0) {
       list(
         fluidRow(
           column(4,
-                 textInput("xlab_cbp", "Enter required x-axis title", "X-axis")
+                 shiny::textInput("xlab_cbp", "Enter required x-axis title", "X-axis")
           ),
           column(4,
-                 textInput("ylab_cbp", "Enter required y-axis title", "Y-axis")
+                 shiny::textInput("ylab_cbp", "Enter required y-axis title", "Y-axis")
           ),
           column(4,
-                 textInput("title_cbp", "Enter required title", "title")
+                 shiny::textInput("title_cbp", "Enter required title", "title")
           ),
           column(4,
-                 textInput("legend_cbp", "Enter required legend title", "legend")
+                 shiny::textInput("legend_cbp", "Enter required legend title", "legend")
           ),
           
           
           column(4,
-                 selectInput("pal.col_CBP", "Choose Colour pattern (plot):",
+                 shiny::selectInput("pal.col_CBP", "Choose Colour pattern (plot):",
                              list(`Sequential` = list("Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples", "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd"),
                                   `Qualitative` = list("Accent", "Dark2", "Paired", "Pastel1", "Pastel2", "Set1", "Set2", "Set3"),
                                   `Diverging` = list("BrBG", "PiYG", "PRGn", "PuOr", "RdBu", "RdGy", "RdYlBu", "RdYlGn", "Spectral"))
                  )
           ),
           column(4,
-                 selectInput("Legend_Position_CBP", "Choose legend position:",
+                 shiny::selectInput("Legend_Position_CBP", "Choose legend position:",
                              choices = c("none","right","left","top","bottom"),
                              selected = "right")
           ),
           
           column(5,
-                 sliderInput("y_min", "y axis min:",
+                 shiny::sliderInput("y_min", "y axis min:",
                              min = -15, max = 0, value = -5
                  )
           ),
           column(
             4,
-            selectInput(
+            shiny::selectInput(
               "theme_cbp", "Choose your theme:",
               list("normal","economist","minimal","grey","light","void","tufte","stata","wsj","calc","hc")
             )
           ),
           column(3,
-                 materialSwitch(inputId = "Show_col_switch_CBP", label = "Show available colours", status = "danger")
+                 shinyWidgets::materialSwitch(inputId = "Show_col_switch_CBP", label = "Show available colours", status = "danger")
           ),
           
           column(
             4,
-            materialSwitch(inputId = "manual_change_cbp", label = "Show me manual controls", status = "danger")
+            shinyWidgets::materialSwitch(inputId = "manual_change_cbp", label = "Show me manual controls", status = "danger")
           )
         )
         
@@ -92,7 +92,7 @@ CBP_server <- function(input, output,session) {
   
   #################manual changes of the plot
   
-  output$manual_change_CBP <- renderUI({
+  output$manual_change_CBP <- shiny::renderUI({
     if (is.null(input$file1_CBP$datapath)) {
       return()
     }
@@ -107,28 +107,28 @@ CBP_server <- function(input, output,session) {
         fluidRow(
           
           column(4,
-                 selectInput("face_cbp", "select font face",
+                 shiny::selectInput("face_cbp", "select font face",
                              choices = c("plain","italic","bold","bold.italic"),
                              selected = "plain")
           ),
           column(4,
-                 selectInput("colour2_cbp","choose colour of axis title and label:",
+                 shiny::selectInput("colour2_cbp","choose colour of axis title and label:",
                              choices = c("darkblue","red","blue","black","yellow","orange","purple","brown","cyan","magenta"),
                              selected = "black")
           ),
           column(4,
-                 selectInput("colour4_cbp","choose colour of legend title and label:",
+                 shiny::selectInput("colour4_cbp","choose colour of legend title and label:",
                              choices = c("darkblue","red","blue","black","yellow","orange","purple","brown","cyan","magenta"),
                              selected = "black")
           ),
           column(4,
-                 selectInput("colour3_cbp","choose colour of plot title:",
+                 shiny::selectInput("colour3_cbp","choose colour of plot title:",
                              choices = c("darkblue","red","blue","black","yellow","orange","purple","brown","cyan","magenta"),
                              selected = "black")
           ),
           
           column(4,
-                 selectInput("font_selector_cbp", "select a font",
+                 shiny::selectInput("font_selector_cbp", "select a font",
                              choices = c(
                                "Arial" ,"Calibri","Georgia","Helvetica" ,"Palatino","Garamond",
                                "Times New Roman" ,"Baskerville","Courier New","Verdana","Century Schoolbook",
@@ -137,32 +137,32 @@ CBP_server <- function(input, output,session) {
                              selected = "Arial")),
           
           column(5,
-                 sliderInput("size1_cbp", "axis label size:",
+                 shiny::sliderInput("size1_cbp", "axis label size:",
                              min = 10, max = 20, value = 10)
           ),
           column(5,
-                 sliderInput("size2_cbp", "axis title size:",
+                 shiny::sliderInput("size2_cbp", "axis title size:",
                              min = 10, max = 20, value = 10
                  )
           ),
           column(5,
-                 sliderInput("size3_cbp", "legend label size:",
+                 shiny::sliderInput("size3_cbp", "legend label size:",
                              min = 10, max = 20, value = 10)
           ),
           column(5,
-                 sliderInput("size4_cbp", "legend title size:",
+                 shiny::sliderInput("size4_cbp", "legend title size:",
                              min = 10, max = 20, value = 10)
           ),
           column(5,
-                 sliderInput("size5_cbp", "plot title size:",
+                 shiny::sliderInput("size5_cbp", "plot title size:",
                              min = 15, max = 30, value = 15)
           ),
           column(5,
-                 sliderInput("angle_cbp","required angle of x-axis labels (degrees)",
+                 shiny::sliderInput("angle_cbp","required angle of x-axis labels (degrees)",
                              min=0, max=135, value=0, step = 15)
           ),
           column(5,
-                 sliderInput("Barwidth_cbp","select required bar width",
+                 shiny::sliderInput("Barwidth_cbp","select required bar width",
                              min=0.1, max=1, value=0.9 )
           )
           
@@ -173,7 +173,7 @@ CBP_server <- function(input, output,session) {
   }) 
   
   ############### plotting
-  plotInput <- reactive({
+  plotInput <- shiny::reactive({
     if (is.null(input$file1_CBP$datapath)) {
       return()
     }
@@ -195,13 +195,13 @@ CBP_server <- function(input, output,session) {
       nb.col <- nlevels(data_cbp$xvar) # number of colouring factors
       
       if (is.null(input$pal.col_CBP)){
-        mycolors <- colorRampPalette(brewer.pal(8, "Blues"))(nb.col) 
+        mycolors <- colorRampPalette(RColorBrewer::brewer.pal(8, "Blues"))(nb.col) 
       } else {
         # Changed here for a debugging
-        mycolors <- colorRampPalette(brewer.pal(8, input$pal.col_CBP))(nb.col)
+        mycolors <- colorRampPalette(RColorBrewer::brewer.pal(8, input$pal.col_CBP))(nb.col)
       }
       #########################
-      y_limits<- reactive({
+      y_limits<- shiny::reactive({
         min_val <- min(input$y_min)
         max_val <- max(data_cbp$yvar)
         c(min_val, max_val)
@@ -295,7 +295,7 @@ CBP_server <- function(input, output,session) {
     
   })
   ################################plot output 
-  output$cbp <- renderPlot( {
+  output$cbp <- shiny::renderPlot( {
     plotInput()
   },
   bg = "transparent"
@@ -303,11 +303,11 @@ CBP_server <- function(input, output,session) {
   
   
   ###############color show
-  output$colours_CBP <- renderPlot( {
+  output$colours_CBP <- shiny::renderPlot( {
     if (is.null(input$Show_col_switch_CBP)){return()}
     if (input$Show_col_switch_CBP > 0) {
       par(mar=c(3,4,2,2))
-      display.brewer.all(n = NULL, type = "all", select = NULL,
+      RColorBrewer::display.brewer.all(n = NULL, type = "all", select = NULL,
                          colorblindFriendly = TRUE)
     }
   },
@@ -315,19 +315,19 @@ CBP_server <- function(input, output,session) {
   ) 
   
   ################### Download button
-  output$image_down_cbp <- renderUI({
+  output$image_down_cbp <- shiny::renderUI({
     if (is.null(input$submit_CBP)) {
       return()
     }
     if (input$submit_CBP > 0) {
-      list(downloadButton("downloadImage5",
+      list(shiny::downloadButton("downloadImage5",
                           label = "Download Plot", class = "butt1"
       ))
     }
   })
   ############# Download image
   
-  output$downloadImage5 <- downloadHandler(
+  output$downloadImage5 <- shiny::downloadHandler(
     filename = "Circularbarplot.png",
     content = function(file) {
       device <- function(..., width, height) {
@@ -336,33 +336,33 @@ CBP_server <- function(input, output,session) {
                        res = 300, units = "in"
         )
       }
-      ggsave(file, plot = plotInput(), device = device)
+      ggplot2::ggsave(file, plot = plotInput(), device = device)
     }
   ) 
   ############################# download data set
-  output$data_set_CBP = renderUI({
+  output$data_set_CBP = shiny::renderUI({
     
     list(
-      selectInput(
+      shiny::selectInput(
         "filenames_cbp", "Choose a dataset:",
         list.files(
-          pattern = c("Circular bar 1.csv|Circular bar 2.csv")
+          pattern = c("circular_bar_1.csv|circular_bar_2.csv")
         )
       ),
-      downloadButton("downloadData5", label = "Download csv file", class = "butt5",)
+      shiny::downloadButton("downloadData5", label = "Download csv file", class = "butt5",)
     )
     
     
     
   })
   
-  datasetInput = reactive({
+  datasetInput = shiny::reactive({
     switch(input$filenames_cbp,
            filenames_cbp
     )
   })
   
-  output$downloadData5 = downloadHandler(
+  output$downloadData5 = shiny::downloadHandler(
     filename = function() {
       input$filenames_cbp
     },

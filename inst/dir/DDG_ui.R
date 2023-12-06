@@ -1,23 +1,23 @@
 DDG_ui <- function(){
-  fluidRow(
+  shiny::fluidRow(
     column(width = 9,
-           box(width = NULL, solidHeader = TRUE,
-               plotOutput('ddg')%>% withSpinner(color="#0dc5c1"),
+           shinydashboard::box(width = NULL, solidHeader = TRUE,
+               shiny::plotOutput('ddg')%>% shinycssloaders::withSpinner(color="#0dc5c1"),
                tags$br(),
-               uiOutput('image_down_ddg'),#download button for plot download
+               shiny::uiOutput('image_down_ddg'),#download button for plot download
                tags$br()
            ),
-           box(width = NULL, 
+           shinydashboard::box(width = NULL, 
                title = "Basic Control Panel",
-               uiOutput('cp_DDG')
+               shiny::uiOutput('cp_DDG')
                
            ) 
     ),
     column(width = 3,
-           box(width = NULL, status = "warning",
-               fileInput("file1_DDG", "CSV File (upload in csv format)", accept=c("text/csv", "text/comma-separated-values,text/plain", ".csv")),
-               checkboxInput("header", "Header", TRUE),
-               uiOutput('var_DDG'),
+           shinydashboard::box(width = NULL, status = "warning",
+               shiny::fileInput("file1_DDG", "CSV File (upload in csv format)", accept=c("text/csv", "text/comma-separated-values,text/plain", ".csv")),
+               shiny::checkboxInput("header", "Header", TRUE),
+               shiny::uiOutput('var_DDG'),
                tags$br(),
                p(
                  class = "text-muted",
@@ -25,18 +25,15 @@ DDG_ui <- function(){
                  )
                )
            ),
-           box(width = NULL, status = "warning",
+           shinydashboard::box(width = NULL, status = "warning",
                tags$br(),
                p(
                  class = "text-muted",
                  paste("Note: Download the dataset here for testing")),
-               uiOutput('data_set_DDG'),
+               shiny::uiOutput('data_set_DDG'),
                tags$br(),
-               plotOutput('colours_DDG'),
-               p(class = "text-muted",
-                 br(),
-                 "Source data updates every 15 seconds."
-               )
+               shiny::plotOutput('colours_DDG'),
+               tags$br()
            )
     )
   )

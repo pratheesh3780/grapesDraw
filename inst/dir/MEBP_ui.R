@@ -1,21 +1,21 @@
 MEBP_ui <- function(){
   
-  fluidRow(
+  shiny::fluidRow(
     column(width = 9,
-           box(width = NULL, solidHeader = TRUE,
-               plotOutput('mebp')%>% withSpinner(color="#0dc5c1"),
+           shinydashboard::box(width = NULL, solidHeader = TRUE,
+               shiny::plotOutput('mebp')%>% shinycssloaders::withSpinner(color="#0dc5c1"),
                tags$br(),
-               uiOutput('image_down_mebp'),#download button for plot download
+               shiny::uiOutput('image_down_mebp'),#download button for plot download
                tags$br()
            ),
-           box(width = NULL, 
-               title = "Control Panel",
-               uiOutput('cp_MEBP')
+           shinydashboard::box(width = NULL, 
+               title = "basic Control Panel",
+               shiny::uiOutput('cp_MEBP')
                
            ),
-           box(width = NULL, 
+           shinydashboard::box(width = NULL, 
                title =  "Advanced Manual Control Panel",
-               uiOutput('manual_MEBP'),
+               shiny::uiOutput('manual_MEBP'),
                tags$br(),
                p(class=  "text-muted",
                  paste("Warning: Manual controls will appear here when manual switch is toggled in basic controls"))
@@ -24,10 +24,10 @@ MEBP_ui <- function(){
            )
     ),
     column(width = 3,
-           box(width = NULL, status = "warning",
-               fileInput("file1_MEBP", "CSV File (upload in csv format)", accept=c("text/csv", "text/comma-separated-values,text/plain", ".csv")),
-               checkboxInput("header", "Header", TRUE),
-               uiOutput('var_MEBP'),
+           shinydashboard::box(width = NULL, status = "warning",
+               shiny::fileInput("file1_MEBP", "CSV File (upload in csv format)", accept=c("text/csv", "text/comma-separated-values,text/plain", ".csv")),
+               shiny::checkboxInput("header", "Header", TRUE),
+               shiny::uiOutput('var_MEBP'),
                tags$br(),
                p(
                  class = "text-muted",
@@ -35,18 +35,15 @@ MEBP_ui <- function(){
                  )
                )
            ),
-           box(width = NULL, status = "warning",
+           shinydashboard::box(width = NULL, status = "warning",
                tags$br(),
                p(
                  class = "text-muted",
                  paste("Note: Download the dataset here for testing")),
-               uiOutput('data_set_MEBP'),
+               shiny::uiOutput('data_set_MEBP'),
                tags$br(),
-               plotOutput('colours_MEBP'),
-               p(class = "text-muted",
-                 br(),
-                 "Source data updates every 15 seconds."
-               )
+               shiny::plotOutput('colours_MEBP'),
+               tags$br()
            )
     )
   )

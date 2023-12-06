@@ -1,29 +1,23 @@
-library(viridis)
-library(viridisLite)
-library(hrbrthemes)
-library(ggthemes)
-library(grDevices)
-
 BOXP_server <- function(input, output,session) {
   
   
   
   ########################## boxp 
-  csvfile_BOXP <- reactive({
+  csvfile_BOXP <- shiny::reactive({
     csvfile_BOXP <- input$file1_BOXP
     if (is.null(csvfile_BOXP)){return(NULL)}
     dt_boxp  <- read.csv(csvfile_BOXP $datapath, header=input$header, sep=",")
     dt_boxp 
   })
   
-  output$var_BOXP  <- renderUI({
+  output$var_BOXP  <- shiny::renderUI({
     if(is.null(input$file1_BOXP$datapath)){
       return()
     }
     else{
-      list (radioButtons("xboxp", "Select the x axis variables", choices =    names(csvfile_BOXP())),
-            radioButtons("yboxp", "Select the y axis variable", choices = names(csvfile_BOXP())),
-            actionBttn(
+      list (shiny::radioButtons("xboxp", "Select the x axis variables", choices =    names(csvfile_BOXP())),
+            shiny::radioButtons("yboxp", "Select the y axis variable", choices = names(csvfile_BOXP())),
+            shinyWidgets::actionBttn(
               inputId = "submit_BOXP",
               label = "DRAW!",
               color = "danger",
@@ -33,28 +27,28 @@ BOXP_server <- function(input, output,session) {
     }
   })
   ############## control panel for plots
-  output$cp_BOXP <- renderUI({
+  output$cp_BOXP <- shiny::renderUI({
     if (is.null(input$file1_BOXP$datapath)){return()}
     if (is.null(input$submit_BOXP)){return()}
     if (input$submit_BOXP > 0) {
       list(
         fluidRow(
           column(4,
-                 textInput("xlab_boxp", "Enter required x-axis title", "X-axis")
+                 shiny::textInput("xlab_boxp", "Enter required x-axis title", "X-axis")
           ),
           column(4,
-                 textInput("ylab_boxp", "Enter required y-axis title", "Y-axis")
+                 shiny::textInput("ylab_boxp", "Enter required y-axis title", "Y-axis")
           ),
           column(4,
-                 textInput("title_boxp", "Enter required title", "title")
+                 shiny::textInput("title_boxp", "Enter required title", "title")
           ),
           column(4,
-                 textInput("colour1_boxp", "Enter required legend title", "legend")
+                 shiny::textInput("colour1_boxp", "Enter required legend title", "legend")
           ),
           
           
           column(4,
-                 selectInput("pal.col_BOXP", "Choose Colour pattern (plot):",
+                 shiny::selectInput("pal.col_BOXP", "Choose Colour pattern (plot):",
                              list(`Sequential` = list("Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples", "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd"),
                                   `Qualitative` = list("Accent", "Dark2", "Paired", "Pastel1", "Pastel2", "Set1", "Set2", "Set3"),
                                   `Diverging` = list("BrBG", "PiYG", "PRGn", "PuOr", "RdBu", "RdGy", "RdYlBu", "RdYlGn", "Spectral"))
@@ -62,24 +56,24 @@ BOXP_server <- function(input, output,session) {
           ),
           
           column(4,
-                 selectInput("Legend_Position_BOXP", "Choose legend position:",
+                 shiny::selectInput("Legend_Position_BOXP", "Choose legend position:",
                              choices = c("none","right","left","top","bottom"),
                              selected = "right")
           ),
           column(
             4,
-            selectInput(
+            shiny::selectInput(
               "theme_boxp", "Choose your theme:",
               list("normal","economist","minimal","grey","light","void","tufte","stata","wsj","calc","hc")
             )
           ),
           column(3,
-                 materialSwitch(inputId = "Show_col_switch_BOXP", label = "Show available colours", status = "danger")
+                 shinyWidgets::materialSwitch(inputId = "Show_col_switch_BOXP", label = "Show available colours", status = "danger")
           ),
           
           column(
             4,
-            materialSwitch(inputId = "manual_change_boxp", label = "Show me manual controls", status = "danger")
+            shinyWidgets::materialSwitch(inputId = "manual_change_boxp", label = "Show me manual controls", status = "danger")
           )
         )
         
@@ -92,7 +86,7 @@ BOXP_server <- function(input, output,session) {
   
   #################manual changes of the plot
   
-  output$manual_BOXP <- renderUI({
+  output$manual_BOXP <- shiny::renderUI({
     if (is.null(input$file1_BOXP$datapath)) {
       return()
     }
@@ -107,12 +101,12 @@ BOXP_server <- function(input, output,session) {
         fluidRow(
           
           column(4,
-                 selectInput("face_boxp", "select font face",
+                 shiny::selectInput("face_boxp", "select font face",
                              choices = c("plain","italic","bold","bold.italic"),
                              selected = "plain")
           ),
           column(4,
-                 selectInput("font_selector_boxp", "select a font",
+                 shiny::selectInput("font_selector_boxp", "select a font",
                              choices = c(
                                "Arial" ,"Calibri","Georgia","Helvetica" ,"Palatino","Garamond",
                                "Times New Roman" ,"Baskerville","Courier New","Verdana","Century Schoolbook",
@@ -120,43 +114,43 @@ BOXP_server <- function(input, output,session) {
                              ),
                              selected = "Arial")),
           column(4,
-                 selectInput("colour2_boxp","choose colour of axis title and label:",
+                 shiny::selectInput("colour2_boxp","choose colour of axis title and label:",
                              choices = c("darkblue","red","blue","black","yellow","orange","purple","brown","cyan","magenta"),
                              selected = "black")
           ),
           column(4,
-                 selectInput("colour4_boxp","choose colour of legend title and label:",
+                 shiny::selectInput("colour4_boxp","choose colour of legend title and label:",
                              choices = c("darkblue","red","blue","black","yellow","orange","purple","brown","cyan","magenta"),
                              selected = "black")
           ),
           column(4,
-                 selectInput("colour3_boxp","choose colour of plot title:",
+                 shiny::selectInput("colour3_boxp","choose colour of plot title:",
                              choices = c("darkblue","red","blue","black","yellow","orange","purple","brown","cyan","magenta"),
                              selected = "black")
           ),
           column(5,
-                 sliderInput("size1_boxp", "axis label size:",
+                 shiny::sliderInput("size1_boxp", "axis label size:",
                              min = 10, max = 20, value = 10)
           ),
           column(5,
-                 sliderInput("size2_boxp", "axis title size:",
+                 shiny::sliderInput("size2_boxp", "axis title size:",
                              min = 10, max = 20, value = 10
                  )
           ),
           column(5,
-                 sliderInput("size3_boxp", "legend label size:",
+                 shiny::sliderInput("size3_boxp", "legend label size:",
                              min = 10, max = 20, value = 10)
           ),
           column(5,
-                 sliderInput("size4_boxp", "legend title size:",
+                 shiny::sliderInput("size4_boxp", "legend title size:",
                              min = 10, max = 20, value = 10)
           ),
           column(5,
-                 sliderInput("size5_boxp", "plot title size:",
+                 shiny::sliderInput("size5_boxp", "plot title size:",
                              min = 15, max = 30, value = 15)
           ),
           column(5,
-                 sliderInput("angle_boxp","required angle of x-axis labels (degrees)",min=0, max=135, value= 0, step = 15)
+                 shiny::sliderInput("angle_boxp","required angle of x-axis labels (degrees)",min=0, max=135, value= 0, step = 15)
           )
           
           
@@ -166,7 +160,7 @@ BOXP_server <- function(input, output,session) {
   }) 
   
   ############### plotting
-  plotInput <- reactive({
+  plotInput <- shiny::reactive({
     if (is.null(input$file1_BOXP$datapath)) {
       return()
     }
@@ -187,10 +181,10 @@ BOXP_server <- function(input, output,session) {
       nb.col<-nlevels(data_boxp$xvar)# number of colouring factors
       
       if (is.null(input$pal.col_BOXP)){
-        mycolors <- colorRampPalette(brewer.pal(8, "Blues"))(nb.col) 
+        mycolors <- colorRampPalette(RColorBrewer::brewer.pal(8, "Blues"))(nb.col) 
       } else {
         # Changed here for a debugging
-        mycolors <- colorRampPalette(brewer.pal(8, input$pal.col_BOXP))(nb.col)
+        mycolors <- colorRampPalette(RColorBrewer::brewer.pal(8, input$pal.col_BOXP))(nb.col)
       }
       
       
@@ -283,7 +277,7 @@ BOXP_server <- function(input, output,session) {
     
   })
   ################################plot output 
-  output$boxp <- renderPlot( {
+  output$boxp <- shiny::renderPlot( {
     plotInput()
   },
   bg = "transparent"
@@ -291,11 +285,11 @@ BOXP_server <- function(input, output,session) {
   
   
   ###############color show
-  output$colours_BOXP <- renderPlot( {
+  output$colours_BOXP <- shiny::renderPlot( {
     if (is.null(input$Show_col_switch_BOXP)){return()}
     if (input$Show_col_switch_BOXP > 0) {
       par(mar=c(3,4,2,2))
-      display.brewer.all(n = NULL, type = "all", select = NULL,
+      RColorBrewer::display.brewer.all(n = NULL, type = "all", select = NULL,
                          colorblindFriendly = TRUE)
     }
   },
@@ -304,19 +298,19 @@ BOXP_server <- function(input, output,session) {
   
   
   ################### Download button
-  output$image_down_boxp <- renderUI({
+  output$image_down_boxp <- shiny::renderUI({
     if (is.null(input$submit_BOXP)) {
       return()
     }
     if (input$submit_BOXP > 0) {
-      list(downloadButton("downloadImage7",
+      list(shiny::downloadButton("downloadImage7",
                           label = "Download Plot", class = "butt1"
       ))
     }
   })
   ############# Download image
   
-  output$downloadImage7 <- downloadHandler(
+  output$downloadImage7 <- shiny::downloadHandler(
     filename = "Box plot.png",
     content = function(file) {
       device <- function(..., width, height) {
@@ -325,33 +319,33 @@ BOXP_server <- function(input, output,session) {
                        res = 300, units = "in"
         )
       }
-      ggsave(file, plot = plotInput(), device = device)
+      ggplot2::ggsave(file, plot = plotInput(), device = device)
     }
   )
   ############################# download data set
-  output$data_set_BOXP = renderUI({
+  output$data_set_BOXP = shiny::renderUI({
     
     list(
-      selectInput(
+      shiny::selectInput(
         "filenames_boxp", "Choose a dataset:",
         list.files(
-          pattern = c("Boxplot data 1.csv|Boxplot data 2.csv")
+          pattern = c("boxplot_data_1.csv|boxplot_data_2.csv")
         )
       ),
-      downloadButton("downloadData7", label = "Download csv file", class = "butt7",)
+      shiny::downloadButton("downloadData7", label = "Download csv file", class = "butt7",)
     )
     
     
     
   })
   
-  datasetInput = reactive({
+  datasetInput = shiny::reactive({
     switch(input$filenames_boxp,
            filenames_boxp
     )
   })
   
-  output$downloadData7 = downloadHandler(
+  output$downloadData7 = shiny::downloadHandler(
     filename = function() {
       input$filenames_boxp
     },

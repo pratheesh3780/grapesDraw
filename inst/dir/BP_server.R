@@ -1,28 +1,23 @@
-library(viridis)
-library(viridisLite)
-library(hrbrthemes)
-library(ggthemes)
-
 BP_server <- function(input, output,session) {
   
   
   
   ########################## BP 
-  csvfile_BP <- reactive({
+  csvfile_BP <- shiny::reactive({
     csvfile_BP <- input$file1_BP
     if (is.null(csvfile_BP)){return(NULL)}
     dt_BP  <- read.csv(csvfile_BP $datapath, header=input$header, sep=",")
     dt_BP 
   })
   
-  output$var_BP  <- renderUI({
+  output$var_BP  <- shiny::renderUI({
     if(is.null(input$file1_BP$datapath)){
       return()
     }
     else{
-      list (radioButtons("xBP", "Select the x axis variables", choices =    names(csvfile_BP())),
-            radioButtons("yBP", "Select the y axis variable", choices = names(csvfile_BP())),
-            actionBttn(
+      list (shiny::radioButtons("xBP", "Select the x axis variables", choices =    names(csvfile_BP())),
+            shiny::radioButtons("yBP", "Select the y axis variable", choices = names(csvfile_BP())),
+            shinyWidgets::actionBttn(
               inputId = "submit_BP",
               label = "DRAW!",
               color = "danger",
@@ -32,52 +27,52 @@ BP_server <- function(input, output,session) {
     }
   })
   ############## control panel for plots
-  output$cp_BP <- renderUI({
+  output$cp_BP <- shiny::renderUI({
     if (is.null(input$file1_BP$datapath)){return()}
     if (is.null(input$submit_BP)){return()}
     if (input$submit_BP > 0) {
       list(
         fluidRow(
           column(4,
-                 textInput("xlab_BP", "Enter required x-axis title", "X-axis")
+                 shiny::textInput("xlab_BP", "Enter required x-axis title", "X-axis")
           ),
           column(4,
-                 textInput("ylab_BP", "Enter required y-axis title", "Y-axis")
+                 shiny::textInput("ylab_BP", "Enter required y-axis title", "Y-axis")
           ),
           column(4,
-                 textInput("title_BP", "Enter required title", "title")
+                 shiny::textInput("title_BP", "Enter required title", "title")
           ),
           column(4,
-                 textInput("legend_BP", "Enter required legend title", "legend")
+                 shiny::textInput("legend_BP", "Enter required legend title", "legend")
           ),
           
           
           column(4,
-                 selectInput("pal.col_BP", "Choose Colour pattern (plot):",
+                 shiny::selectInput("pal.col_BP", "Choose Colour pattern (plot):",
                              list(`Sequential` = list("Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples", "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd"),
                                   `Qualitative` = list("Accent", "Dark2", "Paired", "Pastel1", "Pastel2", "Set1", "Set2", "Set3"),
                                   `Diverging` = list("BrBG", "PiYG", "PRGn", "PuOr", "RdBu", "RdGy", "RdYlBu", "RdYlGn", "Spectral"))
                  )
           ), 
           column(4,
-                 selectInput("Legend_Position_BP", "Choose legend position:",
+                 shiny::selectInput("Legend_Position_BP", "Choose legend position:",
                              choices = c("none","right","left","top","bottom"),
                              selected = "right")
           ),
           column(
             4,
-            selectInput(
+            shiny::selectInput(
               "theme_BP", "Choose your theme:",
               list("normal","economist","minimal","grey","light","void","tufte","stata","wsj","calc","hc")
             )
           ),
           column(3,
-                 materialSwitch(inputId = "Show_col_switch_BP", label = "Show available colours", status = "danger")
+                 shinyWidgets::materialSwitch(inputId = "Show_col_switch_BP", label = "Show available colours", status = "danger")
           ),
           
           column(
             4,
-            materialSwitch(inputId = "manual_change_BP", label = "Show me manual controls", status = "danger")
+            shinyWidgets::materialSwitch(inputId = "manual_change_BP", label = "Show me manual controls", status = "danger")
           )
         )
         
@@ -88,7 +83,7 @@ BP_server <- function(input, output,session) {
   
   #################manual changes of the plot
   
-  output$manual_BP <- renderUI({
+  output$manual_BP <- shiny::renderUI({
     if (is.null(input$file1_BP$datapath)) {
       return()
     }
@@ -103,12 +98,12 @@ BP_server <- function(input, output,session) {
         fluidRow(
           
           column(4,
-                 selectInput("face_BP", "select font face",
+                 shiny::selectInput("face_BP", "select font face",
                              choices = c("plain","italic","bold","bold.italic"),
                              selected = "plain")
           ),
           column(4,
-                 selectInput("font_selector_BP", "select a font",
+                 shiny::selectInput("font_selector_BP", "select a font",
                              choices = c(
                                "Arial" ,"Calibri","Georgia","Helvetica" ,"Palatino","Garamond",
                                "Times New Roman" ,"Baskerville","Courier New","Verdana","Century Schoolbook",
@@ -116,46 +111,46 @@ BP_server <- function(input, output,session) {
                              ),
                              selected = "Arial")),
           column(4,
-                 selectInput("colour2_BP","choose colour of axis title and label:",
+                 shiny::selectInput("colour2_BP","choose colour of axis title and label:",
                              choices = c("darkblue","red","blue","black","yellow","orange","purple","brown","cyan","magenta"),
                              selected = "black")
           ),
           column(4,
-                 selectInput("colour4_BP","choose colour of legend title and label:",
+                 shiny::selectInput("colour4_BP","choose colour of legend title and label:",
                              choices = c("darkblue","red","blue","black","yellow","orange","purple","brown","cyan","magenta"),
                              selected = "black")
           ),
           column(4,
-                 selectInput("colour3_BP","choose colour of plot title:",
+                 shiny::selectInput("colour3_BP","choose colour of plot title:",
                              choices = c("darkblue","red","blue","black","yellow","orange","purple","brown","cyan","magenta"),
                              selected = "black")
           ),
           column(5,
-                 sliderInput("size1_BP", "axis label size:",
+                 shiny::sliderInput("size1_BP", "axis label size:",
                              min = 10, max = 20, value = 10)
           ),
           column(5,
-                 sliderInput("size2_BP", "axis title size:",
+                 shiny::sliderInput("size2_BP", "axis title size:",
                              min = 10, max = 20, value = 10
                  )
           ),
           column(5,
-                 sliderInput("size3_BP", "legend label size:",
+                 shiny::sliderInput("size3_BP", "legend label size:",
                              min = 10, max = 20, value = 10)
           ),
           column(5,
-                 sliderInput("size4_BP", "legend title size:",
+                 shiny::sliderInput("size4_BP", "legend title size:",
                              min = 10, max = 20, value = 10)
           ),
           column(5,
-                 sliderInput("size5_BP", "plot title size:",
+                 shiny::sliderInput("size5_BP", "plot title size:",
                              min = 15, max = 30, value = 15)
           ),
           column(5,
-                 sliderInput("angle_BP","required angle of x-axis labels (degrees)",min=0, max=135, value= 0, step = 15)
+                 shiny::sliderInput("angle_BP","required angle of x-axis labels (degrees)",min=0, max=135, value= 0, step = 15)
           ),
           column(5,
-                 sliderInput("Barwidth_BP","select required bar width",
+                 shiny::sliderInput("Barwidth_BP","select required bar width",
                              min=0.1, max=1, value=0.9)
           )
         )
@@ -164,7 +159,7 @@ BP_server <- function(input, output,session) {
   }) 
   
   ############### plotting
-  plotInput <- reactive({
+  plotInput <- shiny::reactive({
     if (is.null(input$file1_BP$datapath)) {
       return()
     }
@@ -186,10 +181,10 @@ BP_server <- function(input, output,session) {
       nb.col <- nlevels(data_BP$xvar) # number of colouring factors
       
       if (is.null(input$pal.col_BP)){
-        mycolors <- colorRampPalette(brewer.pal(8, "Blues"))(nb.col) 
+        mycolors <- colorRampPalette(RColorBrewer::brewer.pal(8, "Blues"))(nb.col) 
       } else {
         # Changed here for a debugging
-        mycolors <- colorRampPalette(brewer.pal(8, input$pal.col_BP))(nb.col)
+        mycolors <- colorRampPalette(RColorBrewer::brewer.pal(8, input$pal.col_BP))(nb.col)
       }
       
       
@@ -277,7 +272,7 @@ BP_server <- function(input, output,session) {
     
   })
   ################################plot output 
-  output$BP <- renderPlot( {
+  output$BP <- shiny::renderPlot( {
     plotInput()
   },
   bg = "transparent"
@@ -285,11 +280,11 @@ BP_server <- function(input, output,session) {
   
   
   ###############color show
-  output$colours_BP <- renderPlot( {
+  output$colours_BP <- shiny::renderPlot( {
     if (is.null(input$Show_col_switch_BP)){return()}
     if (input$Show_col_switch_BP > 0) {
       par(mar=c(3,4,2,2))
-      display.brewer.all(n = NULL, type = "all", select = NULL,
+      RColorBrewer::display.brewer.all(n = NULL, type = "all", select = NULL,
                          colorblindFriendly = TRUE)
     }
   },
@@ -298,20 +293,20 @@ BP_server <- function(input, output,session) {
   
   
   ################### Download button
-  output$image_down_BP <- renderUI({
+  output$image_down_BP <- shiny::renderUI({
     if (is.null(input$submit_BP)) {
       return()
     }
     
     if (input$submit_BP > 0 ) {
-      list(downloadButton("downloadImage1",
+      list(shiny::downloadButton("downloadImage1",
                           label = "Download Plot", class = "butt1"
       ))
     }
   })
   ############# Download image
   
-  output$downloadImage1 <- downloadHandler(
+  output$downloadImage1 <- shiny::downloadHandler(
     filename = "Bar plot.png",
     content = function(file) {
       device <- function(..., width, height) {
@@ -320,33 +315,33 @@ BP_server <- function(input, output,session) {
                        res = 300, units = "in"
         )
       }
-      ggsave(file, plot = plotInput(), device = device)
+      ggplot2::ggsave(file, plot = plotInput(), device = device)
     }
   )
   ############################# download data set
-  output$data_set_BP = renderUI({
+  output$data_set_BP = shiny::renderUI({
     
     list(
-      selectInput(
+      shiny::selectInput(
         "filenames_bp", "Choose a dataset:",
         list.files(
-          pattern = c("Bar plot 1.csv|Bar plot 2.csv")
+          pattern = c("bar_plot_1.csv|bar_plot_2.csv")
         )
       ),
-      downloadButton("downloadData1", label = "Download csv file", class = "butt1",)
+      shiny::downloadButton("downloadData1", label = "Download csv file", class = "butt1",)
     )
     
     
     
   })
   
-  datasetInput = reactive({
+  datasetInput = shiny::reactive({
     switch(input$filenames_bp,
            filenames_bp
     )
   })
   
-  output$downloadData1 = downloadHandler(
+  output$downloadData1 = shiny::downloadHandler(
     filename = function() {
       input$filenames_bp
     },

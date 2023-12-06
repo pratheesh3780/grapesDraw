@@ -1,31 +1,31 @@
 CBP_ui <- function(){
-                      fluidRow(
+  shiny::fluidRow(
                         column(width = 9,
-                               box(width = NULL, solidHeader = TRUE,
-                                   plotOutput('cbp')%>% withSpinner(color="#0dc5c1"),
+                               shinydashboard::box(width = NULL, solidHeader = TRUE,
+                                   shiny::plotOutput('cbp')%>% shinycssloaders::withSpinner(color="#0dc5c1"),
                                    tags$br(),
-                                   uiOutput('image_down_cbp'),#download button for plot download
+                                   shiny::uiOutput('image_down_cbp'),#download button for plot download
                                    tags$br()
                                ),
-                               box(width = NULL, 
+                               shinydashboard::box(width = NULL, 
                                    title = "Basic Control Panel",
-                                   uiOutput('cp_CBP')
+                                   shiny::uiOutput('cp_CBP')
                                    
                                ),
-                               box(width = NULL, 
+                               shinydashboard::box(width = NULL, 
                                    title =  "Advanced Manual Control Panel",
                                    tags$br(),
                                    p(class=  "text-muted",
-                                     uiOutput('manual_change_CBP'),
+                                     shiny::uiOutput('manual_change_CBP'),
                                      paste("Warning: Manual controls will appear here when manual switch is toggled in basic controls"))
                                    
                                )
                         ),
                         column(width = 3,
-                               box(width = NULL, status = "warning",
-                                   fileInput("file1_CBP", "CSV File (upload in csv format)", accept=c("text/csv", "text/comma-separated-values,text/plain", ".csv")),
-                                   checkboxInput("header", "Header", TRUE),
-                                   uiOutput('var_CBP'),
+                               shinydashboard::box(width = NULL, status = "warning",
+                                   shiny::fileInput("file1_CBP", "CSV File (upload in csv format)", accept=c("text/csv", "text/comma-separated-values,text/plain", ".csv")),
+                                   shiny::checkboxInput("header", "Header", TRUE),
+                                   shiny::uiOutput('var_CBP'),
                                    tags$br(),
                                    p(
                                      class = "text-muted",
@@ -33,18 +33,15 @@ CBP_ui <- function(){
                                      )
                                    )
                                ),
-                               box(width = NULL, status = "warning",
+                               shinydashboard::box(width = NULL, status = "warning",
                                    tags$br(),
                                    p(
                                      class = "text-muted",
                                      paste("Note: Download the dataset here for testing")),
-                                   uiOutput('data_set_CBP'),
+                                   shiny::uiOutput('data_set_CBP'),
                                    tags$br(),
-                                   plotOutput('colours_CBP'),
-                                   p(class = "text-muted",
-                                     br(),
-                                     "Source data updates every 15 seconds."
-                                   )
+                                   shiny::plotOutput('colours_CBP'),
+                                   tags$br()
                                )
                         )
                       )

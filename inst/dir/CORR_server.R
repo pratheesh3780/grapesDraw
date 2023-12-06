@@ -1,21 +1,4 @@
-library(shiny)
-library(shinydashboard)
-library(shinyWidgets)
-library(shinycssloaders)
-library(dplyr)
-library(ggplot2)
-library(viridis)
-library(viridisLite)
-library(hrbrthemes)
-library(RColorBrewer)
-library(ggthemes)
-library(shinythemes)
-library(GGally)
-
 CORR_server <- function(input, output,session) {
-  
-  
-  
   ########################## corr 
   csvfile_CORR <- reactive({
     csvfile_CORR <- input$file1_CORR
@@ -48,32 +31,110 @@ CORR_server <- function(input, output,session) {
     if (input$submit_CORR > 0) {
       list(
         fluidRow(
+          #### 1st row [1]
+          #Method
+          column(4,
+                 selectInput(
+                   "req2_corr", "Correlation Coefficient",
+                   c(
+                     PEARSON = "pearson",
+                     SPEARMAN = "spearman"
+                   ),
+                   "pearson")
+          ),
+          #### 1st row [2]
+          #Shape
+          column(4,
+                 selectInput(
+                   "shape_corr", "Visualization method:",
+                   c(
+                     circle = "circle",
+                     square = "square",
+                     ellipse = "ellipse",
+                     number = "number",
+                     shade = "shade",
+                     color = "color",
+                     pie = "pie"
+                   ),
+                   "circle"
+                 )
+          ),
+          #### 1st row [3]
+          #layout
+          column(4,
+                 selectInput(
+                   "layout_corr", "Correlogram Layout",
+                   c(
+                     full = "full",
+                     upper = "upper",
+                     lower = "lower"
+                   ),
+                   "circle")
+          ),
           
+          #### 2nd row [1]
+          #Change Title
           column(4,
                  textInput("title_corr", "Enter required title", "title")
-          ), 
+          ),
+          #### 2nd row [2]
+          #Change colours
           column(4,
-                 selectInput("mycolors", "Choose Colour pattern (plot):",
+                 selectInput("mycolors_corr", "Colour pattern:",
                              c("Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples", "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd",
                                "Accent", "Dark2", "Paired", "Pastel1", "Pastel2", "Set1", "Set2", "Set3",
                                "BrBG", "PiYG", "PRGn", "PuOr", "RdBu", "RdGy", "RdYlBu", "RdYlGn", "Spectral"),
                              "Blues"
                  )
           ),
+          #### 2nd row [3]
+          #Size of correlation coefficient
           column(4,
-                 selectInput("type_CORR", "Choose the type:",
-                             choices = c("tile", "circle","text"),
-                             selected = "tile")
+                 sliderInput("cex_corr", "Required size of coefficient:",
+                             min = 0.5, max = 3, value = 1
+                 )
           ),
+          #### 3rd row [1]
+          #Significance level
           column(4,
-                 sliderInput("circle_size_CORR", "Choose the size of the circle (if choosen circle as type):",
-                             min = 6, max =15, value = 10)
+                 radioButtons("sig_corr", "Pick significance level", choices = c("0.05", "0.01"))
           ),
+          #### 3rd row [2]
+          #Text colour
           column(4,
-                 sliderInput("label_size_CORR", "Choose the size of correlation coefficient (if choosen circle as type):",
-                             min = 3, max =8, value = 4)
+                 selectInput(
+                   "txcol_corr", "Coefficient colour",
+                   c(
+                     Black = "#141413",
+                     Transparent = "#00141413",
+                     Red = "#ff0d1d",
+                     Blue = "#0d45ff",
+                     Green = "#0dff0d",
+                     Yellow = "#ffdf0d",
+                     Orange = "#ff8a0d"
+                   ), "#141413"
+                 )
           ),
-          column(3,
+          #### 3rd row [3]
+          #show correlation coefficient
+          column(4,
+                 checkboxInput(
+                   "remove_corr",
+                   "Don't show correlation coefficient", FALSE)
+          ),
+          
+          #### 4th row [1]
+          #mark and umark significance
+          column(4,
+                 checkboxInput(
+                   "significance_corr",
+                   "Mark non-significant correlations in the plot", FALSE
+                 )
+          ),
+          
+          #### 4th row [2]
+          #material switch colour
+          column(4,
                  materialSwitch(inputId = "Show_col_switch_CORR", label = "Show available colours", status = "danger")
           ),
         )
@@ -85,7 +146,69 @@ CORR_server <- function(input, output,session) {
   
   
   
-  ############### plotting
+  ############### plotting for download
+  plotInput_down <- reactive({
+    if (is.null(input$file1_CORR$datapath)) {
+      return()
+    }
+    if (is.null(input$submit_CORR)) {
+      return()
+    }
+    if (input$submit_CORR > 0) 
+      
+    {
+      x <- as.data.frame(subset(csvfile_CORR(), select = input$selvar))
+      cormat1 <- cor(x, method = input$req2_corr, use = "complete.obs")
+      req(input$mycolors_corr)
+      corrplot::corrplot(cormat1,
+                         method = input$shape_corr,
+                         type = input$layout_corr, tl.col = "#000000",
+                         col = brewer.pal(n = 8, name = input$mycolors_corr), addCoef.col = input$txcol_corr, number.cex = input$cex_corr
+      )
+      
+      if (input$significance_corr > 0) {
+        x <- as.data.frame(subset(csvfile_CORR(), select = input$selvar))
+        cormat1 <- cor(x, method = input$req2_corr, use = "complete.obs")
+        res1 <- corrplot::cor.mtest(x)
+        req(input$mycolors_corr)
+        corrplot::corrplot(cormat1,
+                           method = input$shape_corr,
+                           type = input$layout_corr, tl.col = "#000000",
+                           col = brewer.pal(n = 8, name = input$mycolors_corr), addCoef.col = input$txcol_corr,
+                           p.mat = res1$p, sig.level = as.numeric(input$sig_corr)
+        )
+      }
+      
+      if (input$remove_corr > 0) {
+        x <- as.data.frame(subset(csvfile_CORR(), select = input$selvar))
+        cormat1 <- cor(x, method = input$req2_corr, use = "complete.obs")
+        res1 <- corrplot::cor.mtest(x)
+        req(input$mycolors_corr)
+        corrplot::corrplot(cormat1,
+                           method = input$shape_corr,
+                           type = input$layout_corr, tl.col = "#000000",
+                           col = brewer.pal(n = 8, name =  input$mycolors_corr)
+        )
+      }
+      
+      if (input$remove_corr > 0 && input$significance_corr > 0) {
+        x <- as.data.frame(subset(csvfile_CORR(), select = input$selvar))
+        cormat1 <- cor(x, method = input$req2_corr, use = "complete.obs")
+        res1 <- corrplot::cor.mtest(x)
+        req(input$mycolors_corr)
+        corrplot::corrplot(cormat1,
+                           method = input$shape_corr,
+                           type = input$layout_corr, tl.col = "#000000",
+                           col = brewer.pal(n = 8, name = input$mycolors_corr),
+                           p.mat = res1$p, sig.level = as.numeric(input$sig_corr)
+        )
+      }
+    }
+    
+  })
+  
+  
+  ############### plotting for display
   plotInput <- reactive({
     if (is.null(input$file1_CORR$datapath)) {
       return()
@@ -97,15 +220,58 @@ CORR_server <- function(input, output,session) {
       
     {
       x <- as.data.frame(subset(csvfile_CORR(), select = input$selvar))
+      cormat1 <- cor(x, method = input$req2_corr, use = "complete.obs")
+      req(input$mycolors_corr)
+      corrplot::corrplot(cormat1,
+                         method = input$shape_corr,
+                         type = input$layout_corr, tl.col = "#000000",
+                         col = brewer.pal(n = 8, name = input$mycolors_corr), addCoef.col = input$txcol_corr, number.cex = input$cex_corr
+      )
       
-      p<-   ggcorr(x,palette = input$mycolors, geom = input$type_CORR, nbreaks = 4,
-                   label_size =input$label_size_CORR, max_size = input$circle_size_CORR) 
-        
-    p
-       
+      if (input$significance_corr > 0) {
+        x <- as.data.frame(subset(csvfile_CORR(), select = input$selvar))
+        cormat1 <- cor(x, method = input$req2_corr, use = "complete.obs")
+        res1 <- corrplot::cor.mtest(x)
+        req(input$mycolors_corr)
+        corrplot::corrplot(cormat1,
+                           method = input$shape_corr,
+                           type = input$layout_corr, tl.col = "#000000",
+                           col = brewer.pal(n = 8, name = input$mycolors_corr), addCoef.col = input$txcol_corr,
+                           p.mat = res1$p, sig.level = as.numeric(input$sig_corr)
+        )
+      }
+      
+      if (input$remove_corr > 0) {
+        x <- as.data.frame(subset(csvfile_CORR(), select = input$selvar))
+        cormat1 <- cor(x, method = input$req2_corr, use = "complete.obs")
+        res1 <- corrplot::cor.mtest(x)
+        req(input$mycolors_corr)
+        corrplot::corrplot(cormat1,
+                           method = input$shape_corr,
+                           type = input$layout_corr, tl.col = "#000000",
+                           col = brewer.pal(n = 8, name =  input$mycolors_corr)
+        )
+      }
+      
+      if (input$remove_corr > 0 && input$significance_corr > 0) {
+        x <- as.data.frame(subset(csvfile_CORR(), select = input$selvar))
+        cormat1 <- cor(x, method = input$req2_corr, use = "complete.obs")
+        res1 <- corrplot::cor.mtest(x)
+        req(input$mycolors_corr)
+        corrplot::corrplot(cormat1,
+                           method = input$shape_corr,
+                           type = input$layout_corr, tl.col = "#000000",
+                           col = brewer.pal(n = 8, name = input$mycolors_corr),
+                           p.mat = res1$p, sig.level = as.numeric(input$sig_corr)
+        )
+      }
     }
+    
   })
+  
+  
   ################################plot output 
+  
   output$corr <- renderPlot( {
     plotInput()
   },
@@ -139,19 +305,21 @@ CORR_server <- function(input, output,session) {
     }
   })
   ############# Download image
-  
   output$downloadImage12 <- downloadHandler(
-    filename = "Correlogram.png",
+    filename = function() {
+      timestamp <- format(Sys.time(), "%Y-%m-%d %H%M") # Format the timestamp
+      paste0("corrplot_", timestamp, ".png")
+    },
     content = function(file) {
-      device <- function(..., width, height) {
-        grDevices::png(...,
-                       width = width, height = height,
-                       res = 300, units = "in"
-        )
-      }
-      ggsave(file, plot = plotInput(), device = device)
+      png(file,
+          width = input$shiny_width,
+          height = input$shiny_height
+      )
+      plotInput_down()
+      dev.off()
     }
   )
+  
   ############################# download data set
   output$data_set_CORR = renderUI({
     
@@ -159,10 +327,10 @@ CORR_server <- function(input, output,session) {
       selectInput(
         "filenames_corr", "Choose a dataset:",
         list.files(
-          pattern = c("Correlogram 1.csv|Correlogram 2.csv")
+          pattern = c("correlogram_1.csv|correlogram_2.csv")
         )
       ),
-      downloadButton("downloadData12", label = "Download csv file", class = "butt12",)
+      downloadButton("downloadData12", label = "Download csv file", class = "butt12")
     )
     
     

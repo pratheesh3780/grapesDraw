@@ -1,20 +1,20 @@
 EBP_ui <- function() {
-               fluidRow(
+  shiny::fluidRow(
                         column(width = 9,
-                               box(width = NULL, solidHeader = TRUE,
-                                   plotOutput('ebp')%>% withSpinner(color="#0dc5c1"),
+                               shinydashboard::box(width = NULL, solidHeader = TRUE,
+                                   shiny::plotOutput('ebp')%>% shinycssloaders::withSpinner(color="#0dc5c1"),
                                    tags$br(),
-                                   uiOutput('image_down_ebp'),#download button for plot download
+                                   shiny::uiOutput('image_down_ebp'),#download button for plot download
                                    tags$br()
                                ),
-                               box(width = NULL, 
-                                   title = "Control Panel",
-                                   uiOutput('cp_EBP')
+                               shinydashboard::box(width = NULL, 
+                                   title = "Basic Control Panel",
+                                   shiny::uiOutput('cp_EBP')
                                    
                                ),
-                               box(width = NULL, 
+                               shinydashboard::box(width = NULL, 
                                    title =  "Advanced Manual Control Panel",
-                                   uiOutput('manual_EBP'),
+                                   shiny::uiOutput('manual_EBP'),
                                    tags$br(),
                                    p(class=  "text-muted",
                                      paste("Warning: Manual controls will appear here when manual switch is toggled in basic controls"))
@@ -23,10 +23,10 @@ EBP_ui <- function() {
                                )
                         ),
                         column(width = 3,
-                               box(width = NULL, status = "warning",
-                                   fileInput("file1_EBP", "CSV File (upload in csv format)", accept=c("text/csv", "text/comma-separated-values,text/plain", ".csv")),
-                                   checkboxInput("header", "Header", TRUE),
-                                   uiOutput('var_EBP'),
+                               shinydashboard::box(width = NULL, status = "warning",
+                                   shiny::fileInput("file1_EBP", "CSV File (upload in csv format)", accept=c("text/csv", "text/comma-separated-values,text/plain", ".csv")),
+                                   shiny::checkboxInput("header", "Header", TRUE),
+                                   shiny::uiOutput('var_EBP'),
                                    tags$br(),
                                    p(
                                      class = "text-muted",
@@ -34,18 +34,15 @@ EBP_ui <- function() {
                                      )
                                    )
                                ),
-                               box(width = NULL, status = "warning",
+                               shinydashboard::box(width = NULL, status = "warning",
                                    tags$br(),
                                    p(
                                      class = "text-muted",
                                      paste("Note: Download the dataset here for testing")),
-                                   uiOutput('data_set_EBP'),
+                                   shiny::uiOutput('data_set_EBP'),
                                    tags$br(),
-                                   plotOutput('colours_EBP'),
-                                   p(class = "text-muted",
-                                     br(),
-                                     "Source data updates every 15 seconds."
-                                   )
+                                   shiny::plotOutput('colours_EBP'),
+                                   tags$br()
                                )
                         )
                       )

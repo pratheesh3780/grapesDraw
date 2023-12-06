@@ -1,21 +1,21 @@
 BOXP_ui <- function(){
-                      fluidRow(
+  shiny::fluidRow(
                         column(width = 9,
-                               box(width = NULL, solidHeader = TRUE,
-                                   plotOutput('boxp')%>% withSpinner(color="#0dc5c1"),
+                               shinydashboard::box(width = NULL, solidHeader = TRUE,
+                                   shiny::plotOutput('boxp')%>% shinycssloaders::withSpinner(color="#0dc5c1"),
                                    tags$br(),
-                                   uiOutput('image_down_boxp'),#download button for plot download
+                                   shiny::uiOutput('image_down_boxp'),#download button for plot download
                                    tags$br()
                                ),
-                               box(width = NULL, 
-                                   title = "Control Panel",
-                                   uiOutput('cp_BOXP')
+                               shinydashboard::box(width = NULL, 
+                                   title = "Basic Control Panel",
+                                   shiny::uiOutput('cp_BOXP')
                                    
                                ),
                                
-                               box(width = NULL, 
+                               shinydashboard::box(width = NULL, 
                                    title =  "Advanced Manual Control Panel",
-                                   uiOutput('manual_BOXP'),
+                                   shiny::uiOutput('manual_BOXP'),
                                    tags$br(),
                                    p(class=  "text-muted",
                                      paste("Warning: Manual controls will appear here when manual switch is toggled in basic controls"))
@@ -24,10 +24,10 @@ BOXP_ui <- function(){
                                )
                         ),
                         column(width = 3,
-                               box(width = NULL, status = "warning",
-                                   fileInput("file1_BOXP", "CSV File (upload in csv format)", accept=c("text/csv", "text/comma-separated-values,text/plain", ".csv")),
-                                   checkboxInput("header", "Header", TRUE),
-                                   uiOutput('var_BOXP'),
+                               shinydashboard::box(width = NULL, status = "warning",
+                                   shiny::fileInput("file1_BOXP", "CSV File (upload in csv format)", accept=c("text/csv", "text/comma-separated-values,text/plain", ".csv")),
+                                   shiny::checkboxInput("header", "Header", TRUE),
+                                   shiny::uiOutput('var_BOXP'),
                                    tags$br(),
                                    p(
                                      class = "text-muted",
@@ -35,18 +35,15 @@ BOXP_ui <- function(){
                                      )
                                    )
                                ),
-                               box(width = NULL, status = "warning",
+                               shinydashboard::box(width = NULL, status = "warning",
                                    tags$br(),
                                    p(
                                      class = "text-muted",
                                      paste("Note: Download the dataset here for testing")),
-                                   uiOutput('data_set_BOXP'),
+                                   shiny::uiOutput('data_set_BOXP'),
                                    tags$br(),
-                                   plotOutput('colours_BOXP'),
-                                   p(class = "text-muted",
-                                     br(),
-                                     "Source data updates every 15 seconds."
-                                   )
+                                   shiny::plotOutput('colours_BOXP'),
+                                   tags$br()
                                )
                         )
                       )
