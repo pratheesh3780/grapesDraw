@@ -1,0 +1,42 @@
+{
+  "input": {
+    "file1_BBC": null,
+    "file1_BOXP": null,
+    "file1_BP": null,
+    "file1_CBP": null,
+    "file1_CORR": null,
+    "file1_CPAC": null,
+    "file1_DDG": null,
+    "file1_EBP": null,
+    "file1_HMP": null,
+    "file1_LPP": null,
+    "file1_MBP": null,
+    "file1_MEBP": null,
+    "file1_RLP": null,
+    "file1_VLP": null,
+    "header_BBC": true,
+    "header_BOXP": true,
+    "header_BP": true,
+    "header_CBP": true,
+    "header_CORR": true,
+    "header_CPAC": true,
+    "header_DDG": true,
+    "header_EBP": true,
+    "header_HMP": true,
+    "header_LPP": true,
+    "header_MBP": true,
+    "header_MEBP": true,
+    "header_RLP": true,
+    "header_VLP": true,
+    "shiny_height": 744,
+    "shiny_width": 992,
+    "sidebarCollapsed": false,
+    "sidebarItemExpanded": null
+  },
+  "output": {
+
+  },
+  "export": {
+
+  }
+}
