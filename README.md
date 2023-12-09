@@ -6,10 +6,7 @@
 ***Introducing*** `grapesDraw`: ***Empowering Agricultural Researchers
 with Dynamic Data Visualization GUI***  
 
-![GitHub](https://img.shields.io/github/license/pratheesh3780/grapesDraw)  
-![GitHub R package version](https://img.shields.io/github/r-package/v/pratheesh3780/grapesDraw)  
-![GitHub language count](https://img.shields.io/github/languages/count/pratheesh3780/grapesDraw)  
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/pratheesh3780/grapesDraw)  
+![GitHub](https://img.shields.io/github/license/pratheesh3780/grapesDraw) ![GitHub R package version](https://img.shields.io/github/r-package/v/pratheesh3780/grapesDraw) ![GitHub language count](https://img.shields.io/github/languages/count/pratheesh3780/grapesDraw) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/pratheesh3780/grapesDraw)  
 
 
 
