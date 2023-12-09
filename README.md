@@ -1,5 +1,5 @@
 
-# grapesDraw: A shiny R Package for data visualization
+# `grapesDraw`: A shiny R Package for data visualization in Agricultural research <img src="man/figures/logo.PNG" align="right" alt="logo" width="173" height = "200" style = "border: none; float: right;">
 
 ***Introducing*** `grapesDraw`: ***Empowering Agricultural Researchers
 with Dynamic Data Visualization GUI***
