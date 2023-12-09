@@ -14,6 +14,6 @@ grapesDraw
 }
 \examples{
 if (interactive()) {
-corrApp()
+draw()
 }
 }

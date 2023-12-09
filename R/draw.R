@@ -19,7 +19,7 @@
 #'
 #' @examples
 #' if (interactive()) {
-#' corrApp()
+#' draw()
 #' }
 draw <- function() {
   appFile <- system.file("draw", package = "grapesDraw")
