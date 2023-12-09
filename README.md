@@ -317,16 +317,15 @@ Enter the data in such away that it gives a matrix where each row is a sample, a
 
 ## Customization of the plot  
 
-
-Customization to a plot or graph can add depth and personalization to your data visualization. The use of control panels, especially a basic control panel and an advanced control panel, can provide users with a user-friendly interface for customizing plots and graphs.  
+In the GUI two control panels were added for the customization of plots. Basic control panel and an Advanced control panel.
 
 ### Basic control panel  
 
-Explore your visualization with our basic control panel, where color schemes, legend positions, and background themes are at your fingertips. Toggle the switch for an advanced manual control panel, diving into the depths of customization
+Explore your visualization with basic control panel, where color schemes, legend positions, and background themes can be adjusted. Toggle the switch for an advanced manual control panel, diving into the depths of customization
 
 ![](man/figures/basic_control.png)  
 
-Background themes used here are:
+A variety of themes are provided from `ggplot2`:
 
 - "normal"    : theme_bw()
 - "economist" : theme_economist()
